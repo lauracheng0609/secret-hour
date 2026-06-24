@@ -76,9 +76,49 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
   );
 }
 
+function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapists: Therapist[]; onClose: () => void }) {
+  // count per therapist
+  const counts: Record<string, { name: string; count: number }> = {};
+  for (const a of past) {
+    if (!counts[a.therapistId]) counts[a.therapistId] = { name: a.therapistName, count: 0 };
+    counts[a.therapistId].count++;
+  }
+  const therapistStats = Object.values(counts);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ maxWidth: 480, margin: "0 auto", left: 0, right: 0 }}>
+      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+      <div className="relative bg-white rounded-t-3xl w-full max-h-[85dvh] flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between px-5 pt-5 pb-3 flex-shrink-0">
+          <h2 className="text-base font-bold text-stone-700">全部歷史紀錄</h2>
+          <button onClick={onClose} className="text-stone-400 text-xl w-8 h-8 flex items-center justify-center">×</button>
+        </div>
+
+        {/* Therapist stats */}
+        {therapistStats.length > 0 && (
+          <div className="px-5 pb-3 flex flex-col gap-1.5 flex-shrink-0">
+            {therapistStats.map((s) => (
+              <p key={s.name} className="text-sm" style={{ color: "#8D6AFF" }}>
+                已經跟 <span className="font-semibold">{s.name}</span> 見面 <span className="font-semibold">{s.count}</span> 次囉❤️
+              </p>
+            ))}
+          </div>
+        )}
+
+        <div className="h-px bg-stone-100 flex-shrink-0" />
+
+        <div className="overflow-y-auto flex-1 px-4 py-3 flex flex-col gap-2">
+          {past.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function SchedulePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [therapists, setTherapists] = useState<Therapist[]>([]);
+  const [showPastModal, setShowPastModal] = useState(false);
 
   useEffect(() => {
     const all = getAppointments().sort(
@@ -90,7 +130,7 @@ export default function SchedulePage() {
 
   const now = new Date();
   const upcoming = appointments.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.time}`) >= now);
-  const past = appointments.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.time}`) < now);
+  const past = appointments.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.time}`) < now).reverse();
 
   return (
     <main className="flex-1 px-4 pt-10 pb-32">
@@ -119,8 +159,15 @@ export default function SchedulePage() {
             <section>
               <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">歷史紀錄</h2>
               <div className="flex flex-col gap-2">
-                {past.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
+                {past.slice(0, 3).map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
               </div>
+              <button
+                onClick={() => setShowPastModal(true)}
+                className="mt-3 w-full py-2.5 rounded-2xl text-sm font-medium border"
+                style={{ color: "#8D6AFF", borderColor: "#c4b5fd" }}
+              >
+                看全部紀錄（共 {past.length} 筆）
+              </button>
             </section>
           )}
         </div>
@@ -133,6 +180,10 @@ export default function SchedulePage() {
       >
         +
       </Link>
+
+      {showPastModal && (
+        <PastModal past={past} therapists={therapists} onClose={() => setShowPastModal(false)} />
+      )}
     </main>
   );
 }
