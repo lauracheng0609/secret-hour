@@ -9,7 +9,6 @@ export default function BottomNav() {
   const isCalendar = pathname === "/schedule";
   const isHome = pathname === "/";
   const isTherapists = pathname.startsWith("/therapists");
-  const isSettings = pathname === "/settings";
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 flex justify-center pb-4 z-50 pointer-events-none" style={{ maxWidth: 480, margin: "0 auto", left: 0, right: 0 }}>
@@ -48,13 +47,6 @@ export default function BottomNav() {
           </svg>
         </Link>
 
-        {/* 設定 */}
-        <Link href="/settings" className="flex flex-col items-center justify-center w-10 h-10">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="3" stroke={isSettings ? "#e8856a" : "#9e9e9e"} strokeWidth="1.8"/>
-            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke={isSettings ? "#e8856a" : "#9e9e9e"} strokeWidth="1.8" strokeLinecap="round"/>
-          </svg>
-        </Link>
       </div>
     </nav>
   );
