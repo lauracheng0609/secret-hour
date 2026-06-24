@@ -165,6 +165,16 @@ export default function HomePage() {
                       <p className="font-semibold text-stone-600 text-base">{a.therapistName}</p>
                       <p className="text-xs text-stone-400 mt-1">時間：{a.time}</p>
                       <p className="text-xs text-stone-400">地點：{a.location || "尚未決定"}</p>
+                      <p className="text-xs mt-2 font-medium" style={{ color: isWithinWeek ? "#FF4894" : "#5b9bd5" }}>
+                        {(() => {
+                          const diffMs = apptTime.getTime() - now.getTime();
+                          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                          const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+                          if (diffDays === 0) return diffHrs <= 0 ? "就是今天 ♥" : `今天再 ${diffHrs} 小時 ♥`;
+                          if (diffDays === 1) return "明天就要見面了 ♥";
+                          return `還有 ${diffDays} 天見到他 ♥`;
+                        })()}
+                      </p>
                     </div>
                     <div className="pr-4 flex flex-col items-center gap-2">
                       {isWithinWeek && (
