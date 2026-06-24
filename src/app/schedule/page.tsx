@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getAppointments, deleteAppointment } from "@/lib/storage";
-import { Appointment } from "@/lib/types";
+import { getAppointments, getTherapists } from "@/lib/storage";
+import { Appointment, Therapist } from "@/lib/types";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function AppointmentCard({ appt }: { appt: Appointment }) {
+function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: Therapist[] }) {
   const apptTime = new Date(`${appt.date}T${appt.time}`);
   const now = new Date();
   const isPast = apptTime < now;
@@ -42,7 +42,20 @@ function AppointmentCard({ appt }: { appt: Appointment }) {
 
         {/* Info */}
         <div className="flex-1 min-w-0 px-4 py-5">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-0.5">
+            {(() => {
+              const t = therapists.find((t) => t.id === appt.therapistId);
+              return t?.avatar ? (
+                <img src={t.avatar} alt={t.name} className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="8" r="4" fill="#f9a8d4"/>
+                    <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke="#f9a8d4" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              );
+            })()}
             <span className="font-semibold text-stone-600 text-base">{appt.therapistName}</span>
             {appt.status === "completed" && (
               <span className="text-[10px] bg-stone-100 text-stone-400 px-2 py-0.5 rounded-full">已完成</span>
@@ -65,12 +78,14 @@ function AppointmentCard({ appt }: { appt: Appointment }) {
 
 export default function SchedulePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [therapists, setTherapists] = useState<Therapist[]>([]);
 
   useEffect(() => {
     const all = getAppointments().sort(
       (a, b) => new Date(`${a.date}T${a.time}`).getTime() - new Date(`${b.date}T${b.time}`).getTime()
     );
     setAppointments(all);
+    setTherapists(getTherapists());
   }, []);
 
   const now = new Date();
@@ -96,7 +111,7 @@ export default function SchedulePage() {
             <section>
               <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">即將到來</h2>
               <div className="flex flex-col gap-2">
-                {upcoming.map((a) => <AppointmentCard key={a.id} appt={a} />)}
+                {upcoming.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
               </div>
             </section>
           )}
@@ -104,7 +119,7 @@ export default function SchedulePage() {
             <section>
               <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">歷史紀錄</h2>
               <div className="flex flex-col gap-2">
-                {past.map((a) => <AppointmentCard key={a.id} appt={a} />)}
+                {past.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
               </div>
             </section>
           )}
