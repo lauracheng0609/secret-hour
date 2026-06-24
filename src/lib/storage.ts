@@ -28,6 +28,15 @@ export function saveTherapist(therapist: Therapist): void {
   localStorage.setItem(THERAPISTS_KEY, JSON.stringify(all));
 }
 
+export function saveTherapistMemo(id: string, memo: string): void {
+  const all = getTherapists();
+  const idx = all.findIndex((t) => t.id === id);
+  if (idx >= 0) {
+    all[idx] = { ...all[idx], memo: memo || undefined };
+    localStorage.setItem(THERAPISTS_KEY, JSON.stringify(all));
+  }
+}
+
 export function deleteTherapist(id: string): void {
   const all = getTherapists().filter((t) => t.id !== id);
   localStorage.setItem(THERAPISTS_KEY, JSON.stringify(all));

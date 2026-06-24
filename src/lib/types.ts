@@ -18,6 +18,7 @@ export interface Therapist {
   avatar?: string; // base64 data URL
   isFavorite?: boolean;
   calendarColor?: string;
+  memo?: string;
   feeItems: FeeItem[];
   depositAmount: number;
   createdAt: string;

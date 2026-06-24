@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getTherapists, deleteTherapist } from "@/lib/storage";
+import { getTherapists, deleteTherapist, saveTherapistMemo } from "@/lib/storage";
 import { Therapist } from "@/lib/types";
 import TherapistForm from "@/components/TherapistForm";
 
@@ -11,10 +11,13 @@ export default function EditTherapistPage() {
   const router = useRouter();
   const [therapist, setTherapist] = useState<Therapist | null>(null);
   const [isDirty, setIsDirty] = useState(false);
+  const [memo, setMemo] = useState("");
+  const [memoSaved, setMemoSaved] = useState(false);
 
   useEffect(() => {
     const found = getTherapists().find((t) => t.id === id) ?? null;
     setTherapist(found);
+    setMemo(found?.memo ?? "");
   }, [id]);
 
   function handleBack() {
@@ -38,6 +41,23 @@ export default function EditTherapistPage() {
         <h1 className="text-xl font-bold text-stone-800">編輯師傅</h1>
       </div>
       <TherapistForm initial={therapist} onDirtyChange={setIsDirty} />
+
+      {/* Memo */}
+      <div className="mt-5 bg-white rounded-2xl p-4 shadow-sm border border-purple-50">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-sm font-semibold text-stone-500">📝 專屬備忘錄</h2>
+          {memoSaved && <span className="text-[10px] text-purple-400">已儲存</span>}
+        </div>
+        <textarea
+          value={memo}
+          onChange={(e) => { setMemo(e.target.value); setMemoSaved(false); }}
+          onBlur={() => { saveTherapistMemo(id, memo); setMemoSaved(true); }}
+          placeholder={"他喜歡的話題、偏好、上次聊到的事…\n寫下來讓每次見面更特別 ♥"}
+          rows={5}
+          className="w-full text-sm text-stone-600 placeholder:text-stone-300 focus:outline-none resize-none leading-relaxed"
+        />
+      </div>
+
       <button
         onClick={handleDelete}
         className="w-full mt-4 py-3 text-sm text-red-400 text-center"
