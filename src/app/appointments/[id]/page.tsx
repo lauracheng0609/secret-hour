@@ -115,6 +115,14 @@ export default function AppointmentDetailPage() {
         </button>
 
         <button
+          onClick={() => router.push(`/appointments/new?copyFrom=${id}`)}
+          className="flex items-center justify-center gap-2 rounded-2xl py-3 font-medium text-sm text-white"
+          style={{ background: "#8D6AFF" }}
+        >
+          ♥ 再約一次
+        </button>
+
+        <button
           onClick={handleDelete}
           className="text-red-400 text-sm text-center py-2"
         >
