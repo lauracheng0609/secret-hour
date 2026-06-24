@@ -52,12 +52,11 @@ function AppointmentCard({ appt }: { appt: Appointment }) {
           <p className="text-xs text-stone-400">地點：{appt.location || "尚未決定"}</p>
         </div>
 
-        {/* Arrow + heart */}
         <div className="pr-4 flex flex-col items-center gap-2">
           {isWithinWeek && (
             <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
           )}
-          <span className="text-stone-300 text-sm">▶</span>
+          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: "#e8856a" }}>查看</span>
         </div>
       </div>
     </Link>

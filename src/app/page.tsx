@@ -142,7 +142,7 @@ export default function HomePage() {
                       {isWithinWeek && (
                         <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
                       )}
-                      <span className="text-stone-300 text-sm">▶</span>
+                      <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: "#e8856a" }}>查看</span>
                     </div>
                   </div>
                 </Link>
