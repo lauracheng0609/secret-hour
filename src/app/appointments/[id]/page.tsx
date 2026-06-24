@@ -43,7 +43,7 @@ export default function AppointmentDetailPage() {
 
   if (editing) {
     return (
-      <main className="flex-1 px-4 pt-6">
+      <main className="flex-1 px-4 pt-6 pb-36">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => setEditing(false)} className="text-stone-400 text-lg">‹</button>
           <h1 className="text-xl font-bold text-stone-800">編輯預約</h1>
