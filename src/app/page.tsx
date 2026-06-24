@@ -171,7 +171,22 @@ export default function HomePage() {
                     </div>
                     <div className="w-px self-stretch my-4" style={{ background: isWithinWeek ? "#f0c0e8" : "#e5e7eb" }} />
                     <div className="flex-1 min-w-0 px-4 py-4">
-                      <p className="font-semibold text-stone-600 text-base">{a.therapistName}</p>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        {(() => {
+                          const t = therapists.find((t) => t.id === a.therapistId);
+                          return t?.avatar ? (
+                            <img src={t.avatar} alt={t.name} className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
+                          ) : (
+                            <div className="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="8" r="4" fill="#f9a8d4"/>
+                                <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke="#f9a8d4" strokeWidth="2" strokeLinecap="round"/>
+                              </svg>
+                            </div>
+                          );
+                        })()}
+                        <p className="font-semibold text-stone-600 text-base">{a.therapistName}</p>
+                      </div>
                       <p className="text-xs text-stone-400 mt-1">時間：{a.time}</p>
                       <p className="text-xs text-stone-400">地點：{a.location || "尚未決定"}</p>
                       <p className="text-xs mt-2 font-medium" style={{ color: isWithinWeek ? "#FF4894" : "#5b9bd5" }}>
