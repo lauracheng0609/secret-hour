@@ -171,7 +171,7 @@ export default function TherapistForm({ initial }: Props) {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="例：Alpha"
+            placeholder="例：王小明"
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
             required
           />
@@ -181,7 +181,7 @@ export default function TherapistForm({ initial }: Props) {
           <input
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            placeholder="例：可愛小狼狗"
+            placeholder="例：小可愛"
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
           />
         </div>
