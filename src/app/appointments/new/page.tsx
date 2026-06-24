@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getAppointments } from "@/lib/storage";
 import { Appointment } from "@/lib/types";
 import AppointmentForm from "@/components/AppointmentForm";
 
-export default function NewAppointmentPage() {
+function NewAppointmentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isDirty, setIsDirty] = useState(false);
@@ -37,5 +37,13 @@ export default function NewAppointmentPage() {
       </div>
       <AppointmentForm initial={template} onDirtyChange={setIsDirty} />
     </main>
+  );
+}
+
+export default function NewAppointmentPage() {
+  return (
+    <Suspense>
+      <NewAppointmentContent />
+    </Suspense>
   );
 }
