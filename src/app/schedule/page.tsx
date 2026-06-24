@@ -1,0 +1,124 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { getAppointments, deleteAppointment } from "@/lib/storage";
+import { Appointment } from "@/lib/types";
+
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function AppointmentCard({ appt }: { appt: Appointment }) {
+  const apptTime = new Date(`${appt.date}T${appt.time}`);
+  const now = new Date();
+  const isPast = apptTime < now;
+  const isWithinWeek = !isPast && apptTime.getTime() - now.getTime() <= 10 * 24 * 60 * 60 * 1000;
+
+  const d = new Date(appt.date);
+  const dateColor = isWithinWeek ? "#FF4894" : "#5b9bd5";
+
+  return (
+    <Link href={`/appointments/${appt.id}`}>
+      <div
+        className={`rounded-2xl shadow-sm flex items-center overflow-hidden ${isPast ? "opacity-50" : ""}`}
+        style={{
+          background: isWithinWeek
+            ? "linear-gradient(to right, #FFE3F9, #FFFFFF)"
+            : "#FFFFFF",
+        }}
+      >
+        {/* Date block */}
+        <div className="flex flex-col justify-center pl-5 pr-4 py-5 min-w-[90px]">
+          <span className="text-xs font-medium" style={{ color: dateColor }}>{d.getFullYear()}</span>
+          <span className="text-4xl font-bold leading-tight" style={{ color: dateColor }}>
+            {d.getMonth() + 1}/{d.getDate()}
+          </span>
+          <span className="text-xs font-medium mt-0.5" style={{ color: dateColor }}>
+            {WEEKDAYS[d.getDay()]}
+          </span>
+        </div>
+
+        {/* Divider */}
+        <div className="w-px self-stretch my-4" style={{ background: isWithinWeek ? "#f0c0e8" : "#e5e7eb" }} />
+
+        {/* Info */}
+        <div className="flex-1 min-w-0 px-4 py-5">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-stone-600 text-base">{appt.therapistName}</span>
+            {appt.status === "completed" && (
+              <span className="text-[10px] bg-stone-100 text-stone-400 px-2 py-0.5 rounded-full">已完成</span>
+            )}
+          </div>
+          <p className="text-xs text-stone-400 mt-1">時間：{appt.time}</p>
+          <p className="text-xs text-stone-400">地點：{appt.location || "尚未決定"}</p>
+        </div>
+
+        {/* Arrow + heart */}
+        <div className="pr-4 flex flex-col items-center gap-2">
+          {isWithinWeek && (
+            <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
+          )}
+          <span className="text-stone-300 text-sm">▶</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+export default function SchedulePage() {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+  useEffect(() => {
+    const all = getAppointments().sort(
+      (a, b) => new Date(`${a.date}T${a.time}`).getTime() - new Date(`${b.date}T${b.time}`).getTime()
+    );
+    setAppointments(all);
+  }, []);
+
+  const now = new Date();
+  const upcoming = appointments.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.time}`) >= now);
+  const past = appointments.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.time}`) < now);
+
+  return (
+    <main className="flex-1 px-4 pt-10 pb-32">
+      <h2 className="text-lg font-semibold text-stone-500 mb-0.5">我的行程</h2>
+      <h1 className="text-4xl font-bold text-stone-700 mb-6">Schedule</h1>
+
+      {appointments.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+          <span className="text-5xl">🗓</span>
+          <p className="text-stone-400 text-sm">還沒有預約紀錄</p>
+          <Link href="/appointments/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "#e8856a" }}>
+            新增預約
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-5">
+          {upcoming.length > 0 && (
+            <section>
+              <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">即將到來</h2>
+              <div className="flex flex-col gap-2">
+                {upcoming.map((a) => <AppointmentCard key={a.id} appt={a} />)}
+              </div>
+            </section>
+          )}
+          {past.length > 0 && (
+            <section>
+              <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">歷史紀錄</h2>
+              <div className="flex flex-col gap-2">
+                {past.map((a) => <AppointmentCard key={a.id} appt={a} />)}
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+
+      <Link
+        href="/appointments/new"
+        className="fixed bottom-24 right-4 w-12 h-12 rounded-full text-white text-2xl flex items-center justify-center shadow-lg z-40"
+        style={{ background: "#e8856a" }}
+      >
+        +
+      </Link>
+    </main>
+  );
+}
