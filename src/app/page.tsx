@@ -294,13 +294,6 @@ export default function HomePage() {
         </section>
       )}
 
-      <Link
-        href="/appointments/new"
-        className="fixed bottom-24 right-4 w-12 h-12 rounded-full text-white text-2xl flex items-center justify-center shadow-lg z-40"
-        style={{ background: "#8D6AFF" }}
-      >
-        +
-      </Link>
     </main>
   );
 }
