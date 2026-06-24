@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "Secret Hour",
   },
   icons: {
-    apple: "/icon.svg",
+    apple: "/apple-touch-icon.png",
   },
 };
 
