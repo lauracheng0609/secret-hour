@@ -77,13 +77,15 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
 }
 
 function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapists: Therapist[]; onClose: () => void }) {
-  // count per therapist
-  const counts: Record<string, { name: string; count: number }> = {};
-  for (const a of past) {
-    if (!counts[a.therapistId]) counts[a.therapistId] = { name: a.therapistName, count: 0 };
-    counts[a.therapistId].count++;
-  }
-  const therapistStats = Object.values(counts);
+  // build unique therapist list from past records
+  const therapistOptions = Array.from(
+    new Map(past.map((a) => [a.therapistId, a.therapistName])).entries()
+  ).map(([id, name]) => ({ id, name }));
+
+  const [selectedId, setSelectedId] = useState(therapistOptions[0]?.id ?? "");
+
+  const filtered = past.filter((a) => a.therapistId === selectedId);
+  const hasMultiple = therapistOptions.length > 1;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ maxWidth: 480, margin: "0 auto", left: 0, right: 0 }}>
@@ -94,21 +96,37 @@ function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapi
           <button onClick={onClose} className="text-stone-400 text-xl w-8 h-8 flex items-center justify-center">×</button>
         </div>
 
-        {/* Therapist stats */}
-        {therapistStats.length > 0 && (
-          <div className="px-5 pb-3 flex flex-col gap-1.5 flex-shrink-0">
-            {therapistStats.map((s) => (
-              <p key={s.name} className="text-sm" style={{ color: "#8D6AFF" }}>
-                已經跟 <span className="font-semibold">{s.name}</span> 見面 <span className="font-semibold">{s.count}</span> 次囉❤️
-              </p>
-            ))}
+        {/* Stats row */}
+        <div className="px-5 pb-3 flex items-center justify-between gap-3 flex-shrink-0">
+          <p className="text-sm flex-1" style={{ color: "#8D6AFF" }}>
+            已經跟 <span className="font-semibold">{therapistOptions.find((t) => t.id === selectedId)?.name}</span> 見面{" "}
+            <span className="font-semibold">{filtered.length}</span> 次囉❤️
+          </p>
+          <div className="relative flex-shrink-0">
+            <select
+              value={selectedId}
+              onChange={(e) => setSelectedId(e.target.value)}
+              disabled={!hasMultiple}
+              className="appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border focus:outline-none"
+              style={{
+                borderColor: hasMultiple ? "#8D6AFF" : "#d1d5db",
+                color: hasMultiple ? "#8D6AFF" : "#9e9e9e",
+                background: "white",
+              }}
+            >
+              {therapistOptions.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px]"
+              style={{ color: hasMultiple ? "#8D6AFF" : "#9e9e9e" }}>▼</span>
           </div>
-        )}
+        </div>
 
         <div className="h-px bg-stone-100 flex-shrink-0" />
 
         <div className="overflow-y-auto flex-1 px-4 py-3 flex flex-col gap-2">
-          {past.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
+          {filtered.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
         </div>
       </div>
     </div>
