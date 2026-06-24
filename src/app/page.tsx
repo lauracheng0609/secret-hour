@@ -131,17 +131,59 @@ function handleImport(e: React.ChangeEvent<HTMLInputElement>, onDone: () => void
   e.target.value = "";
 }
 
+function scheduleNotifications(appointments: Appointment[]) {
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+  const now = new Date();
+  const upcoming = appointments.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.time}`) > now);
+
+  for (const appt of upcoming) {
+    const apptTime = new Date(`${appt.date}T${appt.time}`);
+
+    // notify the evening before (21:00)
+    const evening = new Date(apptTime);
+    evening.setDate(evening.getDate() - 1);
+    evening.setHours(21, 0, 0, 0);
+
+    // notify 2 hours before
+    const twoHoursBefore = new Date(apptTime.getTime() - 2 * 60 * 60 * 1000);
+
+    for (const triggerTime of [evening, twoHoursBefore]) {
+      const delay = triggerTime.getTime() - now.getTime();
+      if (delay > 0 && delay < 24 * 60 * 60 * 1000) { // only schedule within next 24hr
+        setTimeout(() => {
+          const isEveningNotif = triggerTime === evening;
+          new Notification(isEveningNotif ? "明天要見面了 ♥" : "再 2 小時就見到他了 ♥", {
+            body: `${appt.therapistName}・${appt.time}・${appt.location || "地點待確認"}`,
+            icon: "/icon-192.png",
+          });
+        }, delay);
+      }
+    }
+  }
+}
+
 export default function HomePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const importRef = useRef<HTMLInputElement>(null);
 
   function reload() {
-    setAppointments(getAppointments());
+    const appts = getAppointments();
+    setAppointments(appts);
     setTherapists(getTherapists());
+    scheduleNotifications(appts);
   }
 
-  useEffect(() => { reload(); }, []);
+  useEffect(() => {
+    reload();
+    // request notification permission on first load
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().then((perm) => {
+        if (perm === "granted") scheduleNotifications(getAppointments());
+      });
+    }
+  }, []);
 
   const now = new Date();
   const upcoming = appointments
