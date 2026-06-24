@@ -188,24 +188,28 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
         {/* Calendar color */}
         <div className="flex flex-col items-center gap-2">
           <span className="text-xs text-stone-400">月曆顏色</span>
-          <div className="flex gap-2 flex-wrap justify-center">
-            {["#FF4894","#e8856a","#a78bfa","#60a5fa","#34d399","#fbbf24","#f472b6","#fb7185","#818cf8","#2dd4bf"].map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => { markDirty(); setCalendarColor(calendarColor === c ? "" : c); }}
-                className="w-7 h-7 rounded-full transition-transform"
-                style={{
-                  background: c,
-                  transform: calendarColor === c ? "scale(1.25)" : "scale(1)",
-                  boxShadow: calendarColor === c ? `0 0 0 2px white, 0 0 0 4px ${c}` : "none",
-                }}
-              />
-            ))}
+          <div className="flex items-center gap-2 border border-stone-200 rounded-xl px-3 py-2 bg-white">
+            {calendarColor && (
+              <span className="w-4 h-4 rounded-full flex-shrink-0" style={{ background: calendarColor }} />
+            )}
+            <select
+              value={calendarColor}
+              onChange={(e) => { markDirty(); setCalendarColor(e.target.value); }}
+              className="text-sm text-stone-600 focus:outline-none bg-transparent"
+            >
+              <option value="">未設定（預設藍）</option>
+              <option value="#FF4894">🩷 桃紅</option>
+              <option value="#e8856a">🧡 珊瑚橘</option>
+              <option value="#f472b6">💗 粉紫</option>
+              <option value="#fb7185">❤️ 玫瑰</option>
+              <option value="#a78bfa">💜 薰衣草</option>
+              <option value="#818cf8">🫐 靛紫</option>
+              <option value="#60a5fa">💙 天藍</option>
+              <option value="#2dd4bf">🩵 青綠</option>
+              <option value="#34d399">💚 薄荷</option>
+              <option value="#fbbf24">🌼 鵝黃</option>
+            </select>
           </div>
-          {calendarColor && (
-            <span className="text-[10px] text-stone-400">點擊同色可取消</span>
-          )}
         </div>
       </div>
 
