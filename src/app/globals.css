@@ -31,7 +31,7 @@
 }
 
 body {
-  background: linear-gradient(to bottom, #E5F6FF, #F9F9F9);
+  background: linear-gradient(to bottom, #ECE3FF 0%, #EEF9FC 52%, #E6EFFF 100%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
