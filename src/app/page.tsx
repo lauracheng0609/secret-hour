@@ -76,7 +76,7 @@ function CalendarView({ appointments, therapists }: { appointments: Appointment[
                       ? "text-white font-bold"
                       : "text-stone-600"
                   }`}
-                  style={isToday(day) ? { background: "#e8856a" } : {}}
+                  style={isToday(day) ? { background: "#8D6AFF" } : {}}
                 >
                   {day}
                 </span>
@@ -146,7 +146,7 @@ export default function HomePage() {
         <section className="mt-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-stone-500">即將到來</h2>
-            <Link href="/schedule" className="text-xs" style={{ color: "#e8856a" }}>查看全部</Link>
+            <Link href="/schedule" className="text-xs" style={{ color: "#8D6AFF" }}>查看全部</Link>
           </div>
           <div className="flex flex-col gap-2">
             {upcoming.map((a) => {
@@ -204,7 +204,7 @@ export default function HomePage() {
                       {isWithinWeek && (
                         <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
                       )}
-                      <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: "#e8856a" }}>查看</span>
+                      <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: "#8D6AFF" }}>查看</span>
                     </div>
                   </div>
                 </Link>
@@ -217,7 +217,7 @@ export default function HomePage() {
       <Link
         href="/appointments/new"
         className="fixed bottom-24 right-4 w-12 h-12 rounded-full text-white text-2xl flex items-center justify-center shadow-lg z-40"
-        style={{ background: "#e8856a" }}
+        style={{ background: "#8D6AFF" }}
       >
         +
       </Link>

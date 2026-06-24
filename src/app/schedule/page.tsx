@@ -69,7 +69,7 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
           {isWithinWeek && (
             <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
           )}
-          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: "#e8856a" }}>查看</span>
+          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: "#8D6AFF" }}>查看</span>
         </div>
       </div>
     </Link>
@@ -101,7 +101,7 @@ export default function SchedulePage() {
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
           <span className="text-5xl">🗓</span>
           <p className="text-stone-400 text-sm">還沒有預約紀錄</p>
-          <Link href="/appointments/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "#e8856a" }}>
+          <Link href="/appointments/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "#8D6AFF" }}>
             新增預約
           </Link>
         </div>
@@ -129,7 +129,7 @@ export default function SchedulePage() {
       <Link
         href="/appointments/new"
         className="fixed bottom-24 right-4 w-12 h-12 rounded-full text-white text-2xl flex items-center justify-center shadow-lg z-40"
-        style={{ background: "#e8856a" }}
+        style={{ background: "#8D6AFF" }}
       >
         +
       </Link>

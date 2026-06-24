@@ -53,7 +53,7 @@ export default function TherapistsPage() {
         <Link
           href="/therapists/new"
           className="text-sm font-medium text-white px-5 py-2 rounded-full"
-          style={{ background: "#e8856a" }}
+          style={{ background: "#8D6AFF" }}
         >
           Add +
         </Link>
@@ -65,7 +65,7 @@ export default function TherapistsPage() {
           <Link
             href="/therapists/new"
             className="text-sm text-white px-5 py-2 rounded-full"
-            style={{ background: "#e8856a" }}
+            style={{ background: "#8D6AFF" }}
           >
             新增師傅
           </Link>
@@ -90,7 +90,7 @@ export default function TherapistsPage() {
                 <Link
                   href={`/therapists/${t.id}`}
                   className="text-sm font-medium text-white px-4 py-1.5 rounded-full shrink-0"
-                  style={{ background: "#e8856a" }}
+                  style={{ background: "#8D6AFF" }}
                 >
                   編輯
                 </Link>

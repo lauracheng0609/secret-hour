@@ -16,12 +16,12 @@ export default function BottomNav() {
         {/* 行程 */}
         <Link href="/schedule" className="flex flex-col items-center justify-center w-10 h-10">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="4" width="18" height="17" rx="3" stroke={isCalendar ? "#e8856a" : "#9e9e9e"} strokeWidth="1.8" fill="none"/>
-            <path d="M3 9h18" stroke={isCalendar ? "#e8856a" : "#9e9e9e"} strokeWidth="1.8"/>
-            <path d="M8 2v4M16 2v4" stroke={isCalendar ? "#e8856a" : "#9e9e9e"} strokeWidth="1.8" strokeLinecap="round"/>
-            <circle cx="8" cy="14" r="1" fill={isCalendar ? "#e8856a" : "#9e9e9e"}/>
-            <circle cx="12" cy="14" r="1" fill={isCalendar ? "#e8856a" : "#9e9e9e"}/>
-            <circle cx="16" cy="14" r="1" fill={isCalendar ? "#e8856a" : "#9e9e9e"}/>
+            <rect x="3" y="4" width="18" height="17" rx="3" stroke={isCalendar ? "#8D6AFF" : "#9e9e9e"} strokeWidth="1.8" fill="none"/>
+            <path d="M3 9h18" stroke={isCalendar ? "#8D6AFF" : "#9e9e9e"} strokeWidth="1.8"/>
+            <path d="M8 2v4M16 2v4" stroke={isCalendar ? "#8D6AFF" : "#9e9e9e"} strokeWidth="1.8" strokeLinecap="round"/>
+            <circle cx="8" cy="14" r="1" fill={isCalendar ? "#8D6AFF" : "#9e9e9e"}/>
+            <circle cx="12" cy="14" r="1" fill={isCalendar ? "#8D6AFF" : "#9e9e9e"}/>
+            <circle cx="16" cy="14" r="1" fill={isCalendar ? "#8D6AFF" : "#9e9e9e"}/>
           </svg>
         </Link>
 
@@ -29,7 +29,7 @@ export default function BottomNav() {
         <Link
           href="/"
           className="w-14 h-14 rounded-full flex items-center justify-center shadow-md -mt-5"
-          style={{ background: "#e8856a" }}
+          style={{ background: "#8D6AFF" }}
         >
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
             <path
@@ -42,8 +42,8 @@ export default function BottomNav() {
         {/* 師傅 */}
         <Link href="/therapists" className="flex flex-col items-center justify-center w-10 h-10">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="8" r="4" stroke={isTherapists ? "#e8856a" : "#9e9e9e"} strokeWidth="1.8" fill="none"/>
-            <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke={isTherapists ? "#e8856a" : "#9e9e9e"} strokeWidth="1.8" strokeLinecap="round"/>
+            <circle cx="12" cy="8" r="4" stroke={isTherapists ? "#8D6AFF" : "#9e9e9e"} strokeWidth="1.8" fill="none"/>
+            <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke={isTherapists ? "#8D6AFF" : "#9e9e9e"} strokeWidth="1.8" strokeLinecap="round"/>
           </svg>
         </Link>
 

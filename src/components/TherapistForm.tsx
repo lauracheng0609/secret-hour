@@ -38,7 +38,7 @@ function ItemRow({
         value={item.label}
         onChange={(e) => onUpdate("label", e.target.value)}
         placeholder={item.type === "timeunit" ? "加時服務名稱" : "服務項目名稱"}
-        className="flex-1 border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
+        className="flex-1 border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
       />
       {item.type === "timeunit" && (
         <div className="flex items-center border border-stone-200 rounded-xl px-2 py-2 gap-1 w-24">
@@ -199,7 +199,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             >
               <option value="">未設定（預設藍）</option>
               <option value="#FF4894">🩷 桃紅</option>
-              <option value="#e8856a">🧡 珊瑚橘</option>
+              <option value="#8D6AFF">🧡 珊瑚橘</option>
               <option value="#f472b6">💗 粉紫</option>
               <option value="#fb7185">❤️ 玫瑰</option>
               <option value="#a78bfa">💜 薰衣草</option>
@@ -222,7 +222,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={name}
             onChange={(e) => { markDirty(); setName(e.target.value); }}
             placeholder="例：王小明"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
             required
           />
         </div>
@@ -232,7 +232,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={nickname}
             onChange={(e) => { markDirty(); setNickname(e.target.value); }}
             placeholder="例：小可愛"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
           />
         </div>
         <div>
@@ -241,7 +241,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={contact}
             onChange={(e) => { markDirty(); setContact(e.target.value); }}
             placeholder="LINE ID、電話等"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
           />
         </div>
         <div>
@@ -250,7 +250,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={note}
             onChange={(e) => { markDirty(); setNote(e.target.value); }}
             placeholder="其他補充"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
           />
         </div>
       </section>
@@ -261,7 +261,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
         {baseItems.map((fi) => (
           <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={baseItems.length > 1} />
         ))}
-        <button type="button" onClick={() => addItem("base")} className="text-xs text-left" style={{ color: "#e8856a" }}>＋ 新增基礎項目</button>
+        <button type="button" onClick={() => addItem("base")} className="text-xs text-left" style={{ color: "#8D6AFF" }}>＋ 新增基礎項目</button>
       </section>
 
       {/* Time unit */}
@@ -274,7 +274,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
         {timeItems.map((fi) => (
           <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={true} />
         ))}
-        <button type="button" onClick={() => addItem("timeunit")} className="text-xs text-left" style={{ color: "#e8856a" }}>＋ 新增加時項目</button>
+        <button type="button" onClick={() => addItem("timeunit")} className="text-xs text-left" style={{ color: "#8D6AFF" }}>＋ 新增加時項目</button>
       </section>
 
       {/* Add-ons */}
@@ -284,7 +284,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
         {addonItems.map((fi) => (
           <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={true} />
         ))}
-        <button type="button" onClick={() => addItem("addon")} className="text-xs text-left" style={{ color: "#e8856a" }}>＋ 新增加購項目</button>
+        <button type="button" onClick={() => addItem("addon")} className="text-xs text-left" style={{ color: "#8D6AFF" }}>＋ 新增加購項目</button>
       </section>
 
       {/* Deposit */}
@@ -305,7 +305,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       <button
         type="submit"
         className="text-white rounded-2xl py-3 font-semibold text-sm shadow-md"
-        style={{ background: "#e8856a", boxShadow: "0 4px 12px #e8856a44" }}
+        style={{ background: "#8D6AFF", boxShadow: "0 4px 12px #8D6AFF44" }}
       >
         儲存師傅資料
       </button>
