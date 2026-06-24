@@ -27,7 +27,7 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
         }}
       >
         {/* Date block */}
-        <div className="flex flex-col justify-center pl-5 pr-4 py-5 min-w-[90px]">
+        <div className="flex flex-col justify-center pl-5 pr-4 py-5 w-[96px] flex-shrink-0">
           <span className="text-xs font-medium" style={{ color: dateColor }}>{d.getFullYear()}</span>
           <span className="text-4xl font-bold leading-tight" style={{ color: dateColor }}>
             {d.getMonth() + 1}/{d.getDate()}

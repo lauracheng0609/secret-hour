@@ -162,7 +162,7 @@ export default function HomePage() {
                     className="rounded-2xl shadow-sm flex items-center overflow-hidden"
                     style={{ background: isWithinWeek ? "linear-gradient(to right, #FFE3F9, #FFFFFF)" : "#FFFFFF" }}
                   >
-                    <div className="flex flex-col justify-center pl-5 pr-4 py-4 min-w-[90px]">
+                    <div className="flex flex-col justify-center pl-5 pr-4 py-4 w-[96px] flex-shrink-0">
                       <span className="text-xs font-medium" style={{ color: dateColor }}>{d.getFullYear()}</span>
                       <span className="text-4xl font-bold leading-tight" style={{ color: dateColor }}>
                         {d.getMonth() + 1}/{d.getDate()}
