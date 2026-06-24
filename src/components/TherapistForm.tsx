@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { saveTherapist, generateId } from "@/lib/storage";
 import { Therapist, FeeItem } from "@/lib/types";
 
 interface Props {
   initial?: Therapist;
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 function emptyItem(type: FeeItem["type"]): FeeItem {
@@ -68,9 +69,24 @@ function ItemRow({
   );
 }
 
-export default function TherapistForm({ initial }: Props) {
+export default function TherapistForm({ initial, onDirtyChange }: Props) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [isDirty, setIsDirty] = useState(false);
+
+  function markDirty() {
+    if (!isDirty) {
+      setIsDirty(true);
+      onDirtyChange?.(true);
+    }
+  }
+
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
 
   const [name, setName] = useState(initial?.name ?? "");
   const [nickname, setNickname] = useState(initial?.nickname ?? "");
@@ -87,24 +103,30 @@ export default function TherapistForm({ initial }: Props) {
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    markDirty();
     const reader = new FileReader();
     reader.onload = (ev) => setAvatar(ev.target?.result as string);
     reader.readAsDataURL(file);
   }
 
   function updateItem(id: string, field: keyof FeeItem, value: string | number | boolean) {
+    markDirty();
     setFeeItems((prev) => prev.map((fi) => fi.id === id ? { ...fi, [field]: value } : fi));
   }
   function addItem(type: FeeItem["type"]) {
+    markDirty();
     setFeeItems((prev) => [...prev, emptyItem(type)]);
   }
   function removeItem(id: string) {
+    markDirty();
     setFeeItems((prev) => prev.filter((fi) => fi.id !== id));
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
+    setIsDirty(false);
+    onDirtyChange?.(false);
     const therapist: Therapist = {
       id: initial?.id ?? generateId(),
       name: name.trim(),
@@ -148,7 +170,7 @@ export default function TherapistForm({ initial }: Props) {
 
         <button
           type="button"
-          onClick={() => setIsFavorite((v) => !v)}
+          onClick={() => { markDirty(); setIsFavorite((v) => !v); }}
           className="flex items-center gap-2 px-4 py-1.5 rounded-full border transition-colors text-sm"
           style={{
             borderColor: isFavorite ? "#5b9bd5" : "#e5e7eb",
@@ -170,7 +192,7 @@ export default function TherapistForm({ initial }: Props) {
           <label className="text-xs text-stone-400 mb-1 block">師傅名稱 *</label>
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => { markDirty(); setName(e.target.value); }}
             placeholder="例：王小明"
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
             required
@@ -180,7 +202,7 @@ export default function TherapistForm({ initial }: Props) {
           <label className="text-xs text-stone-400 mb-1 block">暱稱</label>
           <input
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e) => { markDirty(); setNickname(e.target.value); }}
             placeholder="例：小可愛"
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
           />
@@ -189,7 +211,7 @@ export default function TherapistForm({ initial }: Props) {
           <label className="text-xs text-stone-400 mb-1 block">聯絡方式</label>
           <input
             value={contact}
-            onChange={(e) => setContact(e.target.value)}
+            onChange={(e) => { markDirty(); setContact(e.target.value); }}
             placeholder="LINE ID、電話等"
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
           />
@@ -198,7 +220,7 @@ export default function TherapistForm({ initial }: Props) {
           <label className="text-xs text-stone-400 mb-1 block">備註</label>
           <input
             value={note}
-            onChange={(e) => setNote(e.target.value)}
+            onChange={(e) => { markDirty(); setNote(e.target.value); }}
             placeholder="其他補充"
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#e8856a]"
           />
@@ -245,7 +267,7 @@ export default function TherapistForm({ initial }: Props) {
           <input
             type="number"
             value={depositAmount || ""}
-            onChange={(e) => setDepositAmount(Number(e.target.value))}
+            onChange={(e) => { markDirty(); setDepositAmount(Number(e.target.value)); }}
             placeholder="預約時需支付的訂金"
             className="flex-1 text-sm focus:outline-none"
           />

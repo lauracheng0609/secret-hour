@@ -7,6 +7,7 @@ import { Therapist, Appointment, AppointmentFeeItem, FeeItem } from "@/lib/types
 
 interface Props {
   initial?: Appointment;
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 // tracks selected state per fee item; for timeunit stores unit count
@@ -81,8 +82,24 @@ function TimeUnitPicker({
   );
 }
 
-export default function AppointmentForm({ initial }: Props) {
+export default function AppointmentForm({ initial, onDirtyChange }: Props) {
   const router = useRouter();
+  const [isDirty, setIsDirty] = useState(false);
+
+  function markDirty() {
+    if (!isDirty) {
+      setIsDirty(true);
+      onDirtyChange?.(true);
+    }
+  }
+
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
+
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [therapistId, setTherapistId] = useState(initial?.therapistId ?? "");
   const [date, setDate] = useState(initial?.date ?? "");
@@ -115,10 +132,12 @@ export default function AppointmentForm({ initial }: Props) {
   }, [therapistId]);
 
   function setUnits(feeItemId: string, units: number) {
+    markDirty();
     setSelection((prev) => ({ ...prev, [feeItemId]: units }));
   }
 
   function toggleAddon(feeItemId: string) {
+    markDirty();
     setSelection((prev) => ({ ...prev, [feeItemId]: prev[feeItemId] ? 0 : 1 }));
   }
 
@@ -144,6 +163,8 @@ export default function AppointmentForm({ initial }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!therapist || !date || !time || !location) return;
+    setIsDirty(false);
+    onDirtyChange?.(false);
     const appt: Appointment = {
       id: initial?.id ?? generateId(),
       therapistId: therapist.id,
@@ -188,7 +209,7 @@ export default function AppointmentForm({ initial }: Props) {
             <button
               key={t.id}
               type="button"
-              onClick={() => setTherapistId(t.id)}
+              onClick={() => { markDirty(); setTherapistId(t.id); }}
               className={`px-4 py-1.5 rounded-full text-sm border transition-colors ${
                 therapistId === t.id
                   ? "bg-pink-500 text-white border-pink-500"
@@ -209,7 +230,7 @@ export default function AppointmentForm({ initial }: Props) {
             <input
               type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => { markDirty(); setDate(e.target.value); }}
               required
               className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-300"
             />
@@ -219,7 +240,7 @@ export default function AppointmentForm({ initial }: Props) {
             <input
               type="time"
               value={time}
-              onChange={(e) => setTime(e.target.value)}
+              onChange={(e) => { markDirty(); setTime(e.target.value); }}
               required
               className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-300"
             />
@@ -229,7 +250,7 @@ export default function AppointmentForm({ initial }: Props) {
           <label className="text-xs text-stone-400 mb-1 block">地點 *</label>
           <input
             value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={(e) => { markDirty(); setLocation(e.target.value); }}
             placeholder="例：捷運忠孝敦化站附近、飯店名稱"
             required
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-300"
@@ -319,7 +340,7 @@ export default function AppointmentForm({ initial }: Props) {
               <input
                 type="number"
                 value={depositPaid || ""}
-                onChange={(e) => setDepositPaid(Number(e.target.value))}
+                onChange={(e) => { markDirty(); setDepositPaid(Number(e.target.value)); }}
                 placeholder="0"
                 className="w-full text-sm focus:outline-none text-right"
               />
@@ -336,7 +357,7 @@ export default function AppointmentForm({ initial }: Props) {
         <label className="text-xs text-stone-400 mb-1 block">備註</label>
         <textarea
           value={note}
-          onChange={(e) => setNote(e.target.value)}
+          onChange={(e) => { markDirty(); setNote(e.target.value); }}
           placeholder="其他注意事項、偏好等"
           rows={3}
           className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-300 resize-none"

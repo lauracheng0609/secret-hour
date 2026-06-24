@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { getTherapists, deleteTherapist } from "@/lib/storage";
 import { Therapist } from "@/lib/types";
@@ -11,11 +10,17 @@ export default function EditTherapistPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [therapist, setTherapist] = useState<Therapist | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     const found = getTherapists().find((t) => t.id === id) ?? null;
     setTherapist(found);
   }, [id]);
+
+  function handleBack() {
+    if (isDirty && !confirm("尚未儲存變更，是否確定要退出？")) return;
+    router.push("/therapists");
+  }
 
   function handleDelete() {
     if (!therapist) return;
@@ -29,10 +34,10 @@ export default function EditTherapistPage() {
   return (
     <main className="flex-1 px-4 pt-6 pb-36">
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/therapists" className="text-stone-400 text-lg">‹</Link>
+        <button onClick={handleBack} className="text-stone-400 text-lg">‹</button>
         <h1 className="text-xl font-bold text-stone-800">編輯師傅</h1>
       </div>
-      <TherapistForm initial={therapist} />
+      <TherapistForm initial={therapist} onDirtyChange={setIsDirty} />
       <button
         onClick={handleDelete}
         className="w-full mt-4 py-3 text-sm text-red-400 text-center"

@@ -12,6 +12,7 @@ export default function AppointmentDetailPage() {
   const router = useRouter();
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [editing, setEditing] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     const found = getAppointments().find((a) => a.id === id) ?? null;
@@ -45,10 +46,10 @@ export default function AppointmentDetailPage() {
     return (
       <main className="flex-1 px-4 pt-6 pb-36">
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => setEditing(false)} className="text-stone-400 text-lg">‹</button>
+          <button onClick={() => { if (isDirty && !confirm("尚未儲存變更，是否確定要退出？")) return; setEditing(false); setIsDirty(false); }} className="text-stone-400 text-lg">‹</button>
           <h1 className="text-xl font-bold text-stone-800">編輯預約</h1>
         </div>
-        <AppointmentForm initial={appointment} />
+        <AppointmentForm initial={appointment} onDirtyChange={setIsDirty} />
       </main>
     );
   }

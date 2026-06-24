@@ -1,16 +1,25 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import AppointmentForm from "@/components/AppointmentForm";
 
 export default function NewAppointmentPage() {
+  const router = useRouter();
+  const [isDirty, setIsDirty] = useState(false);
+
+  function handleBack() {
+    if (isDirty && !confirm("尚未儲存變更，是否確定要退出？")) return;
+    router.push("/");
+  }
+
   return (
     <main className="flex-1 px-4 pt-6 pb-36">
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/" className="text-stone-400 text-lg">‹</Link>
+        <button onClick={handleBack} className="text-stone-400 text-lg">‹</button>
         <h1 className="text-xl font-bold text-stone-800">新增預約</h1>
       </div>
-      <AppointmentForm />
+      <AppointmentForm onDirtyChange={setIsDirty} />
     </main>
   );
 }
