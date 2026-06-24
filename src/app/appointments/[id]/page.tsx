@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { getAppointments, saveAppointment, deleteAppointment } from "@/lib/storage";
+import { getAppointments, deleteAppointment } from "@/lib/storage";
 import { Appointment } from "@/lib/types";
 import AppointmentForm from "@/components/AppointmentForm";
 
@@ -18,13 +18,6 @@ export default function AppointmentDetailPage() {
     const found = getAppointments().find((a) => a.id === id) ?? null;
     setAppointment(found);
   }, [id]);
-
-  function handleMarkComplete() {
-    if (!appointment) return;
-    const updated = { ...appointment, status: "completed" as const };
-    saveAppointment(updated);
-    setAppointment(updated);
-  }
 
   function handleDelete() {
     if (!confirm("確定要刪除這筆預約嗎？")) return;
@@ -121,14 +114,6 @@ export default function AppointmentDetailPage() {
           分享到 LINE
         </button>
 
-        {appointment.status === "upcoming" && (
-          <button
-            onClick={handleMarkComplete}
-            className="bg-stone-100 text-stone-600 rounded-2xl py-3 font-medium text-sm"
-          >
-            標記為已完成
-          </button>
-        )}
         <button
           onClick={handleDelete}
           className="text-red-400 text-sm text-center py-2"
