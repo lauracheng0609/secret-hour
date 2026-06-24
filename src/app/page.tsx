@@ -85,6 +85,23 @@ function CalendarView({ appointments }: { appointments: Appointment[] }) {
   );
 }
 
+const KEYS = ["sh_therapists", "sh_appointments"];
+
+function handleExport() {
+  const data: Record<string, unknown> = {};
+  for (const key of KEYS) {
+    const raw = localStorage.getItem(key);
+    if (raw) data[key] = JSON.parse(raw);
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `secret-hour-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function HomePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
@@ -100,7 +117,18 @@ export default function HomePage() {
 
   return (
     <main className="flex-1 px-4 pt-10 pb-32">
-      <h2 className="text-lg font-semibold text-stone-500 mb-0.5">你好 💆‍♀️</h2>
+      <div className="flex items-start justify-between mb-0.5">
+        <h2 className="text-lg font-semibold text-stone-500">你好 💆‍♀️</h2>
+        <button
+          onClick={handleExport}
+          className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center"
+          title="備份資料"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3v13M7 11l5 5 5-5M4 20h16" stroke="#9e9e9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
       <h1 className="text-4xl font-bold text-stone-700 mb-6">Secret Hour</h1>
 
       <CalendarView appointments={appointments} />
