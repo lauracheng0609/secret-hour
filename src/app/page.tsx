@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getAppointments, getTherapists } from "@/lib/storage";
 import { Appointment, Therapist } from "@/lib/types";
@@ -109,14 +109,39 @@ function handleExport() {
   URL.revokeObjectURL(url);
 }
 
+function handleImport(e: React.ChangeEvent<HTMLInputElement>, onDone: () => void) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target?.result as string);
+      const hasValid = KEYS.some((k) => Array.isArray(data[k]));
+      if (!hasValid) { alert("檔案格式不正確，請選擇 Secret Hour 備份檔案。"); return; }
+      if (!confirm("匯入後將覆蓋現有資料，確定要繼續嗎？")) return;
+      for (const key of KEYS) {
+        if (Array.isArray(data[key])) localStorage.setItem(key, JSON.stringify(data[key]));
+      }
+      onDone();
+    } catch {
+      alert("無法讀取檔案，請確認格式是否正確。");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+}
+
 export default function HomePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [therapists, setTherapists] = useState<Therapist[]>([]);
+  const importRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  function reload() {
     setAppointments(getAppointments());
     setTherapists(getTherapists());
-  }, []);
+  }
+
+  useEffect(() => { reload(); }, []);
 
   const now = new Date();
   const upcoming = appointments
@@ -128,15 +153,28 @@ export default function HomePage() {
     <main className="flex-1 px-4 pt-10 pb-32">
       <div className="flex items-start justify-between mb-0.5">
         <h2 className="text-lg font-semibold text-stone-500">你好 💆‍♀️</h2>
-        <button
-          onClick={handleExport}
-          className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center"
-          title="備份資料"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M12 3v13M7 11l5 5 5-5M4 20h16" stroke="#9e9e9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => importRef.current?.click()}
+            className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center"
+            title="匯入備份"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 21V8M7 13l5-5 5 5M4 20h16" stroke="#9e9e9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <button
+            onClick={handleExport}
+            className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center"
+            title="匯出備份"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v13M7 11l5 5 5-5M4 20h16" stroke="#9e9e9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <input ref={importRef} type="file" accept=".json" className="hidden"
+            onChange={(e) => handleImport(e, reload)} />
+        </div>
       </div>
       <h1 className="text-4xl font-bold text-stone-700 mb-6">Secret Hour</h1>
 
