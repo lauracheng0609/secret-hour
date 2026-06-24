@@ -94,6 +94,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
   const [note, setNote] = useState(initial?.note ?? "");
   const [avatar, setAvatar] = useState<string | undefined>(initial?.avatar);
   const [isFavorite, setIsFavorite] = useState(initial?.isFavorite ?? false);
+  const [calendarColor, setCalendarColor] = useState(initial?.calendarColor ?? "");
   const [depositAmount, setDepositAmount] = useState(initial?.depositAmount ?? 0);
   const [feeItems, setFeeItems] = useState<FeeItem[]>(
     initial?.feeItems.map((fi) => ({ ...fi, type: fi.type ?? (fi.isBase ? "base" : "addon") })) ??
@@ -135,6 +136,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       note: note.trim() || undefined,
       avatar,
       isFavorite,
+      calendarColor: calendarColor || undefined,
       depositAmount,
       feeItems: feeItems.filter((fi) => fi.label.trim()),
       createdAt: initial?.createdAt ?? new Date().toISOString(),
@@ -183,6 +185,28 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
           </svg>
           {isFavorite ? "已加入最愛（置頂）" : "加入最愛"}
         </button>
+        {/* Calendar color */}
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs text-stone-400">月曆顏色</span>
+          <div className="flex gap-2 flex-wrap justify-center">
+            {["#FF4894","#e8856a","#a78bfa","#60a5fa","#34d399","#fbbf24","#f472b6","#fb7185","#818cf8","#2dd4bf"].map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => { markDirty(); setCalendarColor(calendarColor === c ? "" : c); }}
+                className="w-7 h-7 rounded-full transition-transform"
+                style={{
+                  background: c,
+                  transform: calendarColor === c ? "scale(1.25)" : "scale(1)",
+                  boxShadow: calendarColor === c ? `0 0 0 2px white, 0 0 0 4px ${c}` : "none",
+                }}
+              />
+            ))}
+          </div>
+          {calendarColor && (
+            <span className="text-[10px] text-stone-400">點擊同色可取消</span>
+          )}
+        </div>
       </div>
 
       {/* Basic info */}

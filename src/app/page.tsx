@@ -2,21 +2,28 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getAppointments } from "@/lib/storage";
-import { Appointment } from "@/lib/types";
+import { getAppointments, getTherapists } from "@/lib/storage";
+import { Appointment, Therapist } from "@/lib/types";
 
-function CalendarView({ appointments }: { appointments: Appointment[] }) {
+function CalendarView({ appointments, therapists }: { appointments: Appointment[]; therapists: Therapist[] }) {
   const [year, setYear] = useState(() => new Date().getFullYear());
   const [month, setMonth] = useState(() => new Date().getMonth());
 
-  const apptDates = new Set(
-    appointments
-      .filter((a) => {
-        const d = new Date(a.date);
-        return d.getFullYear() === year && d.getMonth() === month && a.status !== "cancelled";
-      })
-      .map((a) => new Date(a.date).getDate())
-  );
+  // Map: date number → therapist color (first appointment wins if multiple same day)
+  const DEFAULT_COLOR = "#5b9bd5";
+  const apptDateColors = new Map<number, string>();
+  appointments
+    .filter((a) => {
+      const d = new Date(a.date);
+      return d.getFullYear() === year && d.getMonth() === month && a.status !== "cancelled";
+    })
+    .forEach((a) => {
+      const day = new Date(a.date).getDate();
+      if (!apptDateColors.has(day)) {
+        const therapist = therapists.find((t) => t.id === a.therapistId);
+        apptDateColors.set(day, therapist?.calendarColor ?? DEFAULT_COLOR);
+      }
+    });
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -73,8 +80,8 @@ function CalendarView({ appointments }: { appointments: Appointment[] }) {
                 >
                   {day}
                 </span>
-                {apptDates.has(day) && (
-                  <span className="w-1.5 h-1.5 rounded-full mt-0.5" style={{ background: "#5b9bd5" }} />
+                {apptDateColors.has(day) && (
+                  <span className="text-[8px] leading-none mt-0.5" style={{ color: apptDateColors.get(day) }}>♥</span>
                 )}
               </>
             )}
@@ -104,9 +111,11 @@ function handleExport() {
 
 export default function HomePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [therapists, setTherapists] = useState<Therapist[]>([]);
 
   useEffect(() => {
     setAppointments(getAppointments());
+    setTherapists(getTherapists());
   }, []);
 
   const now = new Date();
@@ -131,7 +140,7 @@ export default function HomePage() {
       </div>
       <h1 className="text-4xl font-bold text-stone-700 mb-6">Secret Hour</h1>
 
-      <CalendarView appointments={appointments} />
+      <CalendarView appointments={appointments} therapists={therapists} />
 
       {upcoming.length > 0 && (
         <section className="mt-5">
