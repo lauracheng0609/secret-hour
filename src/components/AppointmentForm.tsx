@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getTherapists, saveAppointment, generateId } from "@/lib/storage";
 import { Therapist, Appointment, AppointmentFeeItem, FeeItem } from "@/lib/types";
@@ -108,6 +108,8 @@ export default function AppointmentForm({ initial, onDirtyChange }: Props) {
   const [selection, setSelection] = useState<SelectionMap>({});
   const [depositPaid, setDepositPaid] = useState(initial?.depositPaid ?? 0);
   const [note, setNote] = useState(initial?.note ?? "");
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+  const locationDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const all = getTherapists();
@@ -246,15 +248,40 @@ export default function AppointmentForm({ initial, onDirtyChange }: Props) {
             />
           </div>
         </div>
-        <div>
+        <div className="relative">
           <label className="text-xs text-stone-400 mb-1 block">地點 *</label>
           <input
             value={location}
-            onChange={(e) => { markDirty(); setLocation(e.target.value); }}
+            onChange={(e) => {
+              markDirty();
+              setLocation(e.target.value);
+              const val = e.target.value;
+              if (locationDebounce.current) clearTimeout(locationDebounce.current);
+              if (val.trim().length < 2) { setLocationSuggestions([]); return; }
+              locationDebounce.current = setTimeout(async () => {
+                const res = await fetch(`/api/geocode?q=${encodeURIComponent(val)}`);
+                const data = await res.json();
+                setLocationSuggestions(data);
+              }, 400);
+            }}
+            onBlur={() => setTimeout(() => setLocationSuggestions([]), 150)}
             placeholder="例：捷運忠孝敦化站附近、飯店名稱"
             required
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-300"
           />
+          {locationSuggestions.length > 0 && (
+            <ul className="absolute z-50 left-0 right-0 bg-white border border-stone-100 rounded-xl shadow-lg mt-1 overflow-hidden">
+              {locationSuggestions.map((s, i) => (
+                <li
+                  key={i}
+                  onMouseDown={() => { setLocation(s); setLocationSuggestions([]); markDirty(); }}
+                  className="px-3 py-2.5 text-sm text-stone-600 hover:bg-purple-50 cursor-pointer border-b border-stone-50 last:border-0 truncate"
+                >
+                  📍 {s}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
 
