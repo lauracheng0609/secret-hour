@@ -69,7 +69,7 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
           {isWithinWeek && (
             <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
           )}
-          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: "#8D6AFF" }}>查看</span>
+          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: isWithinWeek ? "#FF4894" : "#8D6AFF" }}>查看</span>
         </div>
       </div>
     </Link>
