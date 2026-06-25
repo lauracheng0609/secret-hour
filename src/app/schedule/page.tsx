@@ -153,7 +153,7 @@ export default function SchedulePage() {
   return (
     <main className="flex-1 px-4 pt-10 pb-32">
       <h2 className="text-lg font-semibold text-stone-500 mb-0.5">我的行程</h2>
-      <h1 className="text-4xl font-bold text-stone-700 mb-6">Schedule</h1>
+      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, #8E4DC8, #DABAE8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Schedule</h1>
 
       {appointments.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">

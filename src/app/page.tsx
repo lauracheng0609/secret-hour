@@ -218,7 +218,7 @@ export default function HomePage() {
             onChange={(e) => handleImport(e, reload)} />
         </div>
       </div>
-      <h1 className="text-4xl font-bold text-stone-700 mb-6">Secret Hour</h1>
+      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, #8E4DC8, #DABAE8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Secret Hour</h1>
 
       <CalendarView appointments={appointments} therapists={therapists} />
 

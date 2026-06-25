@@ -46,7 +46,7 @@ export default function TherapistsPage() {
   return (
     <main className="flex-1 px-4 pt-10 pb-32">
       <h2 className="text-lg font-semibold text-stone-500 mb-0.5">師傅管理</h2>
-      <h1 className="text-4xl font-bold text-stone-700 mb-6">Your Secret</h1>
+      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, #8E4DC8, #DABAE8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Your Secret</h1>
 
       {/* Add button */}
       <div className="flex justify-end mb-4">
