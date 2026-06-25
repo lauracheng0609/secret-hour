@@ -75,7 +75,19 @@ export default function AppointmentDetailPage() {
             {new Date(appointment.date).toLocaleDateString("zh-TW", { year: "numeric", month: "long", day: "numeric", weekday: "long" })}
           </p>
           <p className="text-stone-500 text-sm">{appointment.time}</p>
-          <p className="text-stone-500 text-sm">📍 {appointment.location}</p>
+          {appointment.location ? (
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(appointment.location)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm flex items-center gap-1 underline underline-offset-2"
+              style={{ color: "#8D6AFF" }}
+            >
+              📍 {appointment.location}
+            </a>
+          ) : (
+            <p className="text-stone-400 text-sm">📍 尚未設定地點</p>
+          )}
           {appointment.note && <p className="text-stone-400 text-xs mt-1">{appointment.note}</p>}
         </div>
 
