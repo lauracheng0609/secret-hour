@@ -35,8 +35,10 @@ export interface AppointmentFeeItem {
 export interface WishItem {
   id: string;
   place: string;
+  address?: string;
   url?: string;
   memo?: string;
+  photo?: string; // base64
   createdAt: string;
 }
 

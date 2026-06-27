@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getTherapists, getWishes, saveWish, deleteWish, generateId } from "@/lib/storage";
 import { Therapist, WishItem } from "@/lib/types";
@@ -24,73 +24,136 @@ function Avatar({ src, name }: { src?: string; name: string }) {
 function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: WishItem) => void; onDelete: (id: string) => void }) {
   const [editing, setEditing] = useState(item.place === "");
   const [place, setPlace] = useState(item.place);
+  const [address, setAddress] = useState(item.address ?? "");
   const [url, setUrl] = useState(item.url ?? "");
   const [memo, setMemo] = useState(item.memo ?? "");
+  const [photo, setPhoto] = useState(item.photo);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setPhoto(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  function handleAddressChange(val: string) {
+    setAddress(val);
+    if (debounce.current) clearTimeout(debounce.current);
+    if (val.trim().length < 2) { setSuggestions([]); return; }
+    debounce.current = setTimeout(async () => {
+      const res = await fetch(`/api/geocode?q=${encodeURIComponent(val)}`);
+      setSuggestions(await res.json());
+    }, 400);
+  }
 
   function handleSave() {
     if (!place.trim()) return;
-    onSave({ ...item, place: place.trim(), url: url.trim() || undefined, memo: memo.trim() || undefined });
+    onSave({ ...item, place: place.trim(), address: address.trim() || undefined, url: url.trim() || undefined, memo: memo.trim() || undefined, photo });
     setEditing(false);
+  }
+
+  function handleShareLine() {
+    const lines = [`📍 ${item.place}`];
+    if (item.address) lines.push(`地址：${item.address}`);
+    if (item.url) lines.push(`參考：${item.url}`);
+    window.open(`https://line.me/R/msg/text/?${encodeURIComponent(lines.join("\n"))}`, "_blank");
   }
 
   if (editing) {
     return (
-      <div className="rounded-2xl p-4 flex flex-col gap-3" style={GLASS}>
-        <input
-          value={place}
-          onChange={(e) => setPlace(e.target.value)}
-          placeholder="想去的地方 *"
-          className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70"
-          autoFocus
-        />
-        <input
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="參考網址（選填）"
-          className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70"
-        />
-        <textarea
-          value={memo}
-          onChange={(e) => setMemo(e.target.value)}
-          placeholder="備忘（選填）"
-          rows={3}
-          className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70 resize-none"
-        />
-        <div className="flex gap-2">
-          <button
-            onClick={handleSave}
-            className="flex-1 py-2 rounded-xl text-sm font-medium text-white"
-            style={{ background: "#8D6AFF" }}
-          >
-            儲存
-          </button>
-          {item.place !== "" && (
-            <button onClick={() => setEditing(false)} className="px-4 py-2 rounded-xl text-sm text-stone-400 border border-stone-200">
-              取消
-            </button>
-          )}
+      <div className="rounded-2xl overflow-hidden" style={GLASS}>
+        {/* Photo preview */}
+        <div
+          className="relative h-28 flex items-center justify-center cursor-pointer"
+          style={{ background: photo ? `url(${photo}) center/cover` : "#f3f0ff" }}
+          onClick={() => fileRef.current?.click()}
+        >
+          {photo && <div className="absolute inset-0 bg-white/40" />}
+          <div className="relative flex flex-col items-center gap-1 text-purple-300">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15V19a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="text-xs">{photo ? "更換底圖" : "上傳底圖"}</span>
+          </div>
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+        </div>
+
+        <div className="p-4 flex flex-col gap-3">
+          <input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="地點名稱 *"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70" autoFocus />
+
+          {/* Address autocomplete */}
+          <div className="relative">
+            <input value={address} onChange={(e) => handleAddressChange(e.target.value)}
+              onBlur={() => setTimeout(() => setSuggestions([]), 150)}
+              placeholder="地址（選填）"
+              className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70" />
+            {suggestions.length > 0 && (
+              <ul className="absolute z-50 left-0 right-0 bg-white border border-stone-100 rounded-xl shadow-lg mt-1 overflow-hidden">
+                {suggestions.map((s, i) => (
+                  <li key={i} onMouseDown={() => { setAddress(s); setSuggestions([]); }}
+                    className="px-3 py-2.5 text-sm text-stone-600 hover:bg-purple-50 cursor-pointer border-b border-stone-50 last:border-0 truncate">
+                    📍 {s}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="參考網址（選填）"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70" />
+          <textarea value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="備忘（選填）" rows={2}
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70 resize-none" />
+          <div className="flex gap-2">
+            <button onClick={handleSave} className="flex-1 py-2 rounded-xl text-sm font-medium text-white" style={{ background: "#8D6AFF" }}>儲存</button>
+            {item.place !== "" && (
+              <button onClick={() => setEditing(false)} className="px-4 py-2 rounded-xl text-sm text-stone-400 border border-stone-200">取消</button>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl p-4 flex flex-col gap-2" style={GLASS}>
-      <div className="flex items-start justify-between gap-2">
-        <p className="font-semibold text-stone-700 text-base">📍 {item.place}</p>
-        <div className="flex gap-2 flex-shrink-0">
-          <button onClick={() => setEditing(true)} className="text-xs px-3 py-1 rounded-full border border-purple-200 text-purple-500">編輯</button>
-          <button onClick={() => onDelete(item.id)} className="text-xs px-3 py-1 rounded-full border border-red-100 text-red-400">刪除</button>
+    <div className="rounded-2xl overflow-hidden" style={GLASS}>
+      {/* Photo background */}
+      {item.photo && (
+        <div className="relative h-36" style={{ background: `url(${item.photo}) center/cover` }}>
+          <div className="absolute inset-0 bg-white/40" />
+          <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between">
+            <p className="font-bold text-stone-700 text-lg drop-shadow-sm">📍 {item.place}</p>
+          </div>
+        </div>
+      )}
+      <div className="p-4 flex flex-col gap-2">
+        {!item.photo && <p className="font-semibold text-stone-700 text-base">📍 {item.place}</p>}
+        {item.address && <p className="text-xs text-stone-500">🗺 {item.address}</p>}
+        {item.url && (
+          <a href={item.url} target="_blank" rel="noopener noreferrer"
+            className="text-xs underline underline-offset-2 truncate" style={{ color: "#8D6AFF" }}>
+            🔗 {item.url}
+          </a>
+        )}
+        {item.memo && <p className="text-xs text-stone-400 whitespace-pre-wrap">{item.memo}</p>}
+
+        <div className="flex gap-2 mt-1">
+          <button onClick={handleShareLine}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white"
+            style={{ background: "#06C755" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2C6.48 2 2 6.03 2 11c0 2.7 1.23 5.12 3.18 6.79L4 22l4.43-1.47C9.55 20.83 10.75 21 12 21c5.52 0 10-4.03 10-9S17.52 2 12 2z"/>
+            </svg>
+            分享到 LINE
+          </button>
+          <button onClick={() => setEditing(true)} className="text-xs px-3 py-1.5 rounded-full border border-purple-200 text-purple-500">編輯</button>
+          <button onClick={() => onDelete(item.id)} className="text-xs px-3 py-1.5 rounded-full border border-red-100 text-red-400">刪除</button>
         </div>
       </div>
-      {item.url && (
-        <a href={item.url} target="_blank" rel="noopener noreferrer"
-          className="text-xs underline underline-offset-2 truncate"
-          style={{ color: "#8D6AFF" }}>
-          🔗 {item.url}
-        </a>
-      )}
-      {item.memo && <p className="text-xs text-stone-400 whitespace-pre-wrap">{item.memo}</p>}
     </div>
   );
 }
