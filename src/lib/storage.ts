@@ -1,6 +1,6 @@
 "use client";
 
-import { Therapist, Appointment } from "./types";
+import { Therapist, Appointment, WishItem } from "./types";
 
 const THERAPISTS_KEY = "sh_therapists";
 const APPOINTMENTS_KEY = "sh_appointments";
@@ -59,6 +59,26 @@ export function saveAppointment(appointment: Appointment): void {
 export function deleteAppointment(id: string): void {
   const all = getAppointments().filter((a) => a.id !== id);
   localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(all));
+}
+
+const WISH_KEY = "sh_wishes";
+
+export function getWishes(): WishItem[] {
+  if (typeof window === "undefined") return [];
+  const raw = localStorage.getItem(WISH_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+export function saveWish(item: WishItem): void {
+  const all = getWishes();
+  const idx = all.findIndex((w) => w.id === item.id);
+  if (idx >= 0) all[idx] = item;
+  else all.unshift(item);
+  localStorage.setItem(WISH_KEY, JSON.stringify(all));
+}
+
+export function deleteWish(id: string): void {
+  localStorage.setItem(WISH_KEY, JSON.stringify(getWishes().filter((w) => w.id !== id)));
 }
 
 export function generateId(): string {

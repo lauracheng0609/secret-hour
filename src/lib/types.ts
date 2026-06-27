@@ -32,6 +32,14 @@ export interface AppointmentFeeItem {
   unitMinutes?: number;
 }
 
+export interface WishItem {
+  id: string;
+  place: string;
+  url?: string;
+  memo?: string;
+  createdAt: string;
+}
+
 export interface Appointment {
   id: string;
   therapistId: string;
