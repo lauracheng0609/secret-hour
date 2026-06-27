@@ -128,15 +128,23 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={GLASS}>
+    <div className="rounded-2xl overflow-hidden transition-opacity" style={{ ...GLASS, opacity: item.isRealized ? 0.5 : 1 }}>
       {/* Photo background */}
       {item.photo && (
         <div className="relative h-36" style={{ background: `url(${item.photo}) center/cover` }}>
           <div className="absolute inset-0 bg-white/40" />
+          {item.isRealized && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-5xl">✨</span>
+            </div>
+          )}
         </div>
       )}
       <div className="p-4 flex flex-col gap-2">
-        <p className="font-semibold text-stone-700 text-base">📍 {item.place}</p>
+        <div className="flex items-center gap-2">
+          <p className={`font-semibold text-base flex-1 ${item.isRealized ? "line-through text-stone-400" : "text-stone-700"}`}>📍 {item.place}</p>
+          {item.isRealized && <span className="text-xs text-purple-400 font-medium">已實現 ✨</span>}
+        </div>
         {item.address && <p className="text-xs text-stone-500">🗺 {item.address}</p>}
         {item.url && (
           <a href={item.url} target="_blank" rel="noopener noreferrer"
@@ -147,6 +155,15 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
         {item.memo && <p className="text-xs text-stone-400 whitespace-pre-wrap">{item.memo}</p>}
 
         <div className="flex gap-2 mt-1 justify-end">
+          <button
+            onClick={() => onSave({ ...item, isRealized: !item.isRealized })}
+            className="text-xs px-3 py-1.5 rounded-full border transition-colors"
+            style={item.isRealized
+              ? { borderColor: "#c4b5fd", color: "#8D6AFF", background: "#f5f3ff" }
+              : { borderColor: "#e5e7eb", color: "#9e9e9e" }}
+          >
+            {item.isRealized ? "✨ 已實現" : "✓ 標記實現"}
+          </button>
           <button onClick={() => setEditing(true)}
             className="text-xs font-medium text-white px-4 py-1.5 rounded-full"
             style={{ background: "#8D6AFF" }}>
@@ -227,8 +244,8 @@ export default function TherapistsPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {therapists.map((t) => (
-                <div key={t.id} className="rounded-2xl overflow-hidden relative" style={GLASS}>
+              {therapists.map((t, i) => (
+                <div key={t.id} className="card-enter rounded-2xl overflow-hidden relative" style={{ ...GLASS, animationDelay: `${i * 60}ms` }}>
                   {t.isFavorite && (
                     <div className="absolute top-0 right-3">
                       <svg width="20" height="28" viewBox="0 0 20 28" fill="none">
@@ -271,9 +288,11 @@ export default function TherapistsPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {wishes.map((w) => (
-                <WishCard key={w.id} item={w} onSave={handleSaveWish} onDelete={handleDeleteWish}
+              {wishes.map((w, i) => (
+                <div key={w.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}>
+                <WishCard item={w} onSave={handleSaveWish} onDelete={handleDeleteWish}
                   onCancel={w.place === "" ? () => setWishes((prev) => prev.filter((x) => x.id !== w.id)) : undefined} />
+                </div>
               ))}
             </div>
           )}

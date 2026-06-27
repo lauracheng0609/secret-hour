@@ -229,7 +229,7 @@ export default function HomePage() {
             <Link href="/schedule" className="text-xs" style={{ color: "#8D6AFF" }}>查看全部</Link>
           </div>
           <div className="flex flex-col gap-2">
-            {upcoming.map((a) => {
+            {upcoming.map((a, i) => {
               const apptTime = new Date(`${a.date}T${a.time}`);
               const now = new Date();
               const isWithinWeek = apptTime.getTime() - now.getTime() <= 10 * 24 * 60 * 60 * 1000;
@@ -237,7 +237,8 @@ export default function HomePage() {
               const WEEKDAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
               const dateColor = isWithinWeek ? "#FF4894" : "#5b9bd5";
               return (
-                <Link key={a.id} href={`/appointments/${a.id}`}>
+                <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}>
+                <Link href={`/appointments/${a.id}`}>
                   <div
                     className="rounded-2xl shadow-sm flex items-center overflow-hidden"
                     style={{ background: isWithinWeek ? "linear-gradient(to right, #FFE3F9, #FFFFFF)" : "#FFFFFF" }}
@@ -288,6 +289,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </Link>
+                </div>
               );
             })}
           </div>

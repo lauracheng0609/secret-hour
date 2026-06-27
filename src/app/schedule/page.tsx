@@ -126,7 +126,7 @@ function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapi
         <div className="h-px bg-stone-100 flex-shrink-0" />
 
         <div className="overflow-y-auto flex-1 px-4 py-3 flex flex-col gap-2">
-          {filtered.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
+          {filtered.map((a, i) => <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}><AppointmentCard appt={a} therapists={therapists} /></div>)}
         </div>
       </div>
     </div>
@@ -169,7 +169,7 @@ export default function SchedulePage() {
             <section>
               <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">即將到來</h2>
               <div className="flex flex-col gap-2">
-                {upcoming.map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
+                {upcoming.map((a, i) => <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}><AppointmentCard appt={a} therapists={therapists} /></div>)}
               </div>
             </section>
           )}
@@ -177,7 +177,7 @@ export default function SchedulePage() {
             <section>
               <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">歷史紀錄</h2>
               <div className="flex flex-col gap-2">
-                {past.slice(0, 3).map((a) => <AppointmentCard key={a.id} appt={a} therapists={therapists} />)}
+                {past.slice(0, 3).map((a, i) => <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}><AppointmentCard appt={a} therapists={therapists} /></div>)}
               </div>
               <button
                 onClick={() => setShowPastModal(true)}

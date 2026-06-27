@@ -40,6 +40,7 @@ export interface WishItem {
   url?: string;
   memo?: string;
   photo?: string; // base64
+  isRealized?: boolean;
   createdAt: string;
 }
 
