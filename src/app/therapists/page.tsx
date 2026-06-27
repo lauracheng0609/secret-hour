@@ -143,7 +143,7 @@ function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: Wish
         )}
         {item.memo && <p className="text-xs text-stone-400 whitespace-pre-wrap">{item.memo}</p>}
 
-        <div className="flex gap-2 mt-1">
+        <div className="flex gap-2 mt-1 justify-end">
           <button onClick={() => setEditing(true)}
             className="text-xs font-medium text-white px-4 py-1.5 rounded-full"
             style={{ background: "#8D6AFF" }}>
