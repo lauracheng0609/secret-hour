@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getAppointments, getTherapists } from "@/lib/storage";
 import { Appointment, Therapist } from "@/lib/types";
+import { useTheme } from "@/lib/theme";
 
 function CalendarView({ appointments, therapists }: { appointments: Appointment[]; therapists: Therapist[] }) {
   const [year, setYear] = useState(() => new Date().getFullYear());
@@ -49,7 +50,7 @@ function CalendarView({ appointments, therapists }: { appointments: Appointment[
   ];
 
   return (
-    <div className="rounded-3xl p-5" style={{ background: "rgba(255,255,255,0.55)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "0 4px 24px rgba(141,106,255,0.08)" }}>
+    <div className="rounded-3xl p-5" style={{ background: "var(--glass-bg)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "0 4px 24px var(--glass-shadow)" }}>
       {/* Month nav */}
       <div className="flex items-center justify-between mb-4">
         <button onClick={prev} className="w-8 h-8 flex items-center justify-center rounded-full text-stone-400 hover:bg-stone-50">‹</button>
@@ -76,7 +77,7 @@ function CalendarView({ appointments, therapists }: { appointments: Appointment[
                       ? "text-white font-bold"
                       : "text-stone-600"
                   }`}
-                  style={isToday(day) ? { background: "#8D6AFF" } : {}}
+                  style={isToday(day) ? { background: "var(--accent)" } : {}}
                 >
                   {day}
                 </span>
@@ -168,6 +169,7 @@ export default function HomePage() {
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [toast, setToast] = useState(false);
   const importRef = useRef<HTMLInputElement>(null);
+  const { theme, toggle } = useTheme();
 
   function showToast() {
     setToast(true);
@@ -203,28 +205,38 @@ export default function HomePage() {
         <h2 className="text-lg font-semibold text-stone-500">你好 💆‍♀️</h2>
         <div className="flex items-center gap-2">
           <button
+            onClick={toggle}
+            className="w-9 h-9 rounded-full shadow-sm flex items-center justify-center text-base"
+            style={{ background: "var(--section-bg)" }}
+            title="切換配色"
+          >
+            {theme === "purple" ? "🌿" : "🫧"}
+          </button>
+          <button
             onClick={() => importRef.current?.click()}
-            className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center"
+            className="w-9 h-9 rounded-full shadow-sm flex items-center justify-center"
+            style={{ background: "var(--section-bg)" }}
             title="匯入備份"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 21V8M7 13l5-5 5 5M4 20h16" stroke="#9e9e9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 21V8M7 13l5-5 5 5M4 20h16" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
           <button
             onClick={handleExport}
-            className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center"
+            className="w-9 h-9 rounded-full shadow-sm flex items-center justify-center"
+            style={{ background: "var(--section-bg)" }}
             title="匯出備份"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 3v13M7 11l5 5 5-5M4 20h16" stroke="#9e9e9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 3v13M7 11l5 5 5-5M4 20h16" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
           <input ref={importRef} type="file" accept=".json" className="hidden"
             onChange={(e) => handleImport(e, () => { reload(); showToast(); })} />
         </div>
       </div>
-      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, #8E4DC8, #DABAE8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Secret Hour</h1>
+      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, var(--title-from), var(--title-to))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Secret Hour</h1>
 
       <CalendarView appointments={appointments} therapists={therapists} />
 
@@ -232,7 +244,7 @@ export default function HomePage() {
         <section className="mt-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-stone-500">即將到來</h2>
-            <Link href="/schedule" className="text-xs" style={{ color: "#8D6AFF" }}>查看全部</Link>
+            <Link href="/schedule" className="text-xs" style={{ color: "var(--accent)" }}>查看全部</Link>
           </div>
           <div className="flex flex-col gap-2">
             {upcoming.map((a, i) => {
@@ -241,13 +253,13 @@ export default function HomePage() {
               const isWithinWeek = apptTime.getTime() - now.getTime() <= 10 * 24 * 60 * 60 * 1000;
               const d = new Date(a.date);
               const WEEKDAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-              const dateColor = isWithinWeek ? "#FF4894" : "#5b9bd5";
+              const dateColor = isWithinWeek ? "var(--accent-hot)" : "var(--accent-cool)";
               return (
                 <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}>
                 <Link href={`/appointments/${a.id}`}>
                   <div
                     className="rounded-2xl shadow-sm flex items-center overflow-hidden"
-                    style={{ background: isWithinWeek ? "linear-gradient(to right, #FFE3F9, #FFFFFF)" : "#FFFFFF" }}
+                    style={{ background: isWithinWeek ? "var(--card-warm-bg)" : "var(--card-bg)" }}
                   >
                     <div className="flex flex-col justify-center pl-5 pr-4 py-4 w-[96px] flex-shrink-0">
                       <span className="text-xs font-medium" style={{ color: dateColor }}>{d.getFullYear()}</span>
@@ -256,7 +268,7 @@ export default function HomePage() {
                       </span>
                       <span className="text-xs font-medium mt-0.5" style={{ color: dateColor }}>{WEEKDAYS[d.getDay()]}</span>
                     </div>
-                    <div className="w-px self-stretch my-4" style={{ background: isWithinWeek ? "#f0c0e8" : "#e5e7eb" }} />
+                    <div className="w-px self-stretch my-4" style={{ background: isWithinWeek ? "var(--card-warm-divider)" : "var(--border-subtle)" }} />
                     <div className="flex-1 min-w-0 px-4 py-4">
                       <div className="flex items-center gap-2 mb-0.5">
                         {(() => {
@@ -276,7 +288,7 @@ export default function HomePage() {
                       </div>
                       <p className="text-xs text-stone-400 mt-1">時間：{a.time}</p>
                       <p className="text-xs text-stone-400">地點：{a.location || "尚未決定"}</p>
-                      <p className="text-xs mt-2 font-medium" style={{ color: isWithinWeek ? "#FF4894" : "#5b9bd5" }}>
+                      <p className="text-xs mt-2 font-medium" style={{ color: isWithinWeek ? "var(--accent-hot)" : "var(--accent-cool)" }}>
                         {(() => {
                           const diffMs = apptTime.getTime() - now.getTime();
                           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -289,9 +301,9 @@ export default function HomePage() {
                     </div>
                     <div className="pr-4 flex flex-col items-center gap-2">
                       {isWithinWeek && (
-                        <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
+                        <span className="heartbeat text-base" style={{ color: "var(--accent-hot)" }}>♥</span>
                       )}
-                      <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: isWithinWeek ? "#FF4894" : "#8D6AFF" }}>查看</span>
+                      <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: isWithinWeek ? "var(--accent-hot)" : "var(--accent)" }}>查看</span>
                     </div>
                   </div>
                 </Link>

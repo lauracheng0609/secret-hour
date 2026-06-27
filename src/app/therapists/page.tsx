@@ -6,10 +6,10 @@ import { getTherapists, getWishes, saveWish, deleteWish, generateId } from "@/li
 import { Therapist, WishItem } from "@/lib/types";
 
 const GLASS = {
-  background: "rgba(255,255,255,0.55)",
+  background: "var(--glass-bg)",
   backdropFilter: "blur(16px)",
   WebkitBackdropFilter: "blur(16px)",
-  boxShadow: "0 4px 24px rgba(141,106,255,0.08)",
+  boxShadow: "0 4px 24px var(--glass-shadow)",
 } as React.CSSProperties;
 
 function Avatar({ src, name }: { src?: string; name: string }) {
@@ -109,7 +109,7 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
           <textarea value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="備忘（選填）" rows={2}
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70 resize-none" />
           <div className="flex gap-2">
-            <button onClick={handleSave} className="flex-1 py-2 rounded-xl text-sm font-medium text-white" style={{ background: "#8D6AFF" }}>儲存</button>
+            <button onClick={handleSave} className="flex-1 py-2 rounded-xl text-sm font-medium text-white" style={{ background: "var(--accent)" }}>儲存</button>
             <button
               onClick={() => item.place !== "" ? setEditing(false) : onCancel?.()}
               className="px-4 py-2 rounded-xl text-sm text-stone-400 border border-stone-200"
@@ -148,7 +148,7 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
         {item.address && <p className="text-xs text-stone-500">🗺 {item.address}</p>}
         {item.url && (
           <a href={item.url} target="_blank" rel="noopener noreferrer"
-            className="text-xs underline underline-offset-2 truncate" style={{ color: "#8D6AFF" }}>
+            className="text-xs underline underline-offset-2 truncate" style={{ color: "var(--accent)" }}>
             🔗 {item.url}
           </a>
         )}
@@ -159,19 +159,19 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
             onClick={() => onSave({ ...item, isRealized: !item.isRealized })}
             className="text-xs px-3 py-1.5 rounded-full border transition-colors"
             style={item.isRealized
-              ? { borderColor: "#c4b5fd", color: "#8D6AFF", background: "#f5f3ff" }
+              ? { borderColor: "#c4b5fd", color: "var(--accent)", background: "#f5f3ff" }
               : { borderColor: "#e5e7eb", color: "#9e9e9e" }}
           >
             {item.isRealized ? "✨ 已實現" : "✓ 標記實現"}
           </button>
           <button onClick={() => setEditing(true)}
             className="text-xs font-medium text-white px-4 py-1.5 rounded-full"
-            style={{ background: "#8D6AFF" }}>
+            style={{ background: "var(--accent)" }}>
             編輯
           </button>
           <button onClick={handleShareLine}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white"
-            style={{ background: "#06C755" }}>
+            style={{ background: "var(--accent-green)" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
               <path d="M12 2C6.48 2 2 6.03 2 11c0 2.7 1.23 5.12 3.18 6.79L4 22l4.43-1.47C9.55 20.83 10.75 21 12 21c5.52 0 10-4.03 10-9S17.52 2 12 2z"/>
             </svg>
@@ -214,7 +214,7 @@ export default function TherapistsPage() {
   return (
     <main className="flex-1 px-4 pt-10 pb-32">
       <h2 className="text-lg font-semibold text-stone-500 mb-0.5">屬於我的</h2>
-      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, #8E4DC8, #DABAE8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Your Secret</h1>
+      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, var(--title-from), var(--title-to))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Your Secret</h1>
 
       {/* Tabs */}
       <div className="flex gap-2 mb-5 rounded-2xl p-1.5" style={GLASS}>
@@ -223,7 +223,7 @@ export default function TherapistsPage() {
             key={t}
             onClick={() => setTab(t)}
             className="flex-1 py-2 rounded-xl text-sm font-medium transition-all"
-            style={tab === t ? { background: "#8D6AFF", color: "white" } : { color: "#9e9e9e" }}
+            style={tab === t ? { background: "var(--accent)", color: "white" } : { color: "#9e9e9e" }}
           >
             {t === "therapists" ? "我的師傅" : "許願池"}
           </button>
@@ -233,14 +233,14 @@ export default function TherapistsPage() {
       {tab === "therapists" && (
         <>
           <div className="flex justify-end mb-4">
-            <Link href="/therapists/new" className="text-sm font-medium text-white px-5 py-2 rounded-full" style={{ background: "#8D6AFF" }}>
+            <Link href="/therapists/new" className="text-sm font-medium text-white px-5 py-2 rounded-full" style={{ background: "var(--accent)" }}>
               Add +
             </Link>
           </div>
           {therapists.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
               <p className="text-stone-400 text-sm">還沒有師傅資料</p>
-              <Link href="/therapists/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "#8D6AFF" }}>新增師傅</Link>
+              <Link href="/therapists/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "var(--accent)" }}>新增師傅</Link>
             </div>
           ) : (
             <div className="flex flex-col gap-3">
@@ -249,7 +249,7 @@ export default function TherapistsPage() {
                   {t.isFavorite && (
                     <div className="absolute top-0 right-3">
                       <svg width="20" height="28" viewBox="0 0 20 28" fill="none">
-                        <path d="M0 0h20v24l-10-6-10 6V0z" fill="#5b9bd5"/>
+                        <path d="M0 0h20v24l-10-6-10 6V0z" fill="var(--accent-cool)"/>
                       </svg>
                     </div>
                   )}
@@ -260,10 +260,10 @@ export default function TherapistsPage() {
                       {t.nickname && <p className="text-sm text-stone-400">{t.nickname}</p>}
                       {t.anniversaryDate && (() => {
                         const days = Math.floor((Date.now() - new Date(t.anniversaryDate).getTime()) / (1000 * 60 * 60 * 24));
-                        return days >= 0 ? <p className="text-xs font-medium mt-0.5" style={{ color: "#8D6AFF" }}>相遇 {days} 天 ♥</p> : null;
+                        return days >= 0 ? <p className="text-xs font-medium mt-0.5" style={{ color: "var(--accent)" }}>相遇 {days} 天 ♥</p> : null;
                       })()}
                     </div>
-                    <Link href={`/therapists/${t.id}`} className="text-sm font-medium text-white px-4 py-1.5 rounded-full shrink-0" style={{ background: "#8D6AFF" }}>
+                    <Link href={`/therapists/${t.id}`} className="text-sm font-medium text-white px-4 py-1.5 rounded-full shrink-0" style={{ background: "var(--accent)" }}>
                       編輯
                     </Link>
                   </div>
@@ -277,7 +277,7 @@ export default function TherapistsPage() {
       {tab === "wishes" && (
         <>
           <div className="flex justify-end mb-4">
-            <button onClick={handleAddWish} className="text-sm font-medium text-white px-5 py-2 rounded-full" style={{ background: "#8D6AFF" }}>
+            <button onClick={handleAddWish} className="text-sm font-medium text-white px-5 py-2 rounded-full" style={{ background: "var(--accent)" }}>
               Add +
             </button>
           </div>

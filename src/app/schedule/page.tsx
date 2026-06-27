@@ -14,16 +14,14 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
   const isWithinWeek = !isPast && apptTime.getTime() - now.getTime() <= 10 * 24 * 60 * 60 * 1000;
 
   const d = new Date(appt.date);
-  const dateColor = isWithinWeek ? "#FF4894" : "#5b9bd5";
+  const dateColor = isWithinWeek ? "var(--accent-hot)" : "var(--accent-cool)";
 
   return (
     <Link href={`/appointments/${appt.id}`}>
       <div
         className={`rounded-2xl shadow-sm flex items-center overflow-hidden ${isPast ? "opacity-50" : ""}`}
         style={{
-          background: isWithinWeek
-            ? "linear-gradient(to right, #FFE3F9, #FFFFFF)"
-            : "#FFFFFF",
+          background: isWithinWeek ? "var(--card-warm-bg)" : "var(--card-bg)",
         }}
       >
         {/* Date block */}
@@ -38,7 +36,7 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
         </div>
 
         {/* Divider */}
-        <div className="w-px self-stretch my-4" style={{ background: isWithinWeek ? "#f0c0e8" : "#e5e7eb" }} />
+        <div className="w-px self-stretch my-4" style={{ background: isWithinWeek ? "var(--card-warm-divider)" : "var(--border-subtle)" }} />
 
         {/* Info */}
         <div className="flex-1 min-w-0 px-4 py-5">
@@ -67,9 +65,9 @@ function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: 
 
         <div className="pr-4 flex flex-col items-center gap-2">
           {isWithinWeek && (
-            <span className="heartbeat text-base" style={{ color: "#FF4894" }}>♥</span>
+            <span className="heartbeat text-base" style={{ color: "var(--accent-hot)" }}>♥</span>
           )}
-          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: isWithinWeek ? "#FF4894" : "#8D6AFF" }}>查看</span>
+          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: isWithinWeek ? "var(--accent-hot)" : "var(--accent)" }}>查看</span>
         </div>
       </div>
     </Link>
@@ -90,7 +88,7 @@ function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapi
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ maxWidth: 480, margin: "0 auto", left: 0, right: 0 }}>
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl w-full max-h-[85dvh] flex flex-col shadow-2xl">
+      <div className="relative rounded-t-3xl w-full max-h-[85dvh] flex flex-col shadow-2xl" style={{ background: "var(--section-bg)" }}>
         <div className="flex items-center justify-between px-5 pt-5 pb-3 flex-shrink-0">
           <h2 className="text-base font-bold text-stone-700">全部歷史紀錄</h2>
           <button onClick={onClose} className="text-stone-400 text-xl w-8 h-8 flex items-center justify-center">×</button>
@@ -98,7 +96,7 @@ function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapi
 
         {/* Stats row */}
         <div className="px-5 pb-3 flex items-center justify-between gap-3 flex-shrink-0">
-          <p className="text-sm flex-1" style={{ color: "#8D6AFF" }}>
+          <p className="text-sm flex-1" style={{ color: "var(--accent)" }}>
             已經跟 <span className="font-semibold">{therapistOptions.find((t) => t.id === selectedId)?.name}</span> 見面{" "}
             <span className="font-semibold">{filtered.length}</span> 次囉❤️
           </p>
@@ -109,8 +107,8 @@ function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapi
               disabled={!hasMultiple}
               className="appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border focus:outline-none"
               style={{
-                borderColor: hasMultiple ? "#8D6AFF" : "#d1d5db",
-                color: hasMultiple ? "#8D6AFF" : "#9e9e9e",
+                borderColor: hasMultiple ? "var(--accent)" : "#d1d5db",
+                color: hasMultiple ? "var(--accent)" : "#9e9e9e",
                 background: "white",
               }}
             >
@@ -119,7 +117,7 @@ function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapi
               ))}
             </select>
             <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px]"
-              style={{ color: hasMultiple ? "#8D6AFF" : "#9e9e9e" }}>▼</span>
+              style={{ color: hasMultiple ? "var(--accent)" : "#9e9e9e" }}>▼</span>
           </div>
         </div>
 
@@ -153,13 +151,13 @@ export default function SchedulePage() {
   return (
     <main className="flex-1 px-4 pt-10 pb-32">
       <h2 className="text-lg font-semibold text-stone-500 mb-0.5">我的行程</h2>
-      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, #8E4DC8, #DABAE8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Schedule</h1>
+      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, var(--title-from), var(--title-to))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Schedule</h1>
 
       {appointments.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
           <span className="text-5xl">🗓</span>
           <p className="text-stone-400 text-sm">還沒有預約紀錄</p>
-          <Link href="/appointments/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "#8D6AFF" }}>
+          <Link href="/appointments/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "var(--accent)" }}>
             新增預約
           </Link>
         </div>
@@ -182,7 +180,7 @@ export default function SchedulePage() {
               <button
                 onClick={() => setShowPastModal(true)}
                 className="mt-3 w-full py-2.5 rounded-2xl text-sm font-medium border"
-                style={{ color: "#8D6AFF", borderColor: "#c4b5fd" }}
+                style={{ color: "var(--accent)", borderColor: "#c4b5fd" }}
               >
                 看全部紀錄（共 {past.length} 筆）
               </button>
@@ -194,7 +192,7 @@ export default function SchedulePage() {
       <Link
         href="/appointments/new"
         className="fixed bottom-24 right-4 w-12 h-12 rounded-full text-white text-2xl flex items-center justify-center shadow-lg z-40"
-        style={{ background: "#8D6AFF" }}
+        style={{ background: "var(--accent)" }}
       >
         +
       </Link>

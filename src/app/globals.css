@@ -1,17 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #ddeaf4;
-  --card: #ffffff;
+  /* Purple theme (default) */
   --accent: #8D6AFF;
-  --accent-light: #f5c4b6;
-  --blue-mark: #5b9bd5;
+  --accent-hot: #FF4894;
+  --accent-cool: #5b9bd5;
+  --accent-green: #06C755;
+  --title-from: #8E4DC8;
+  --title-to: #DABAE8;
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-shadow: rgba(141, 106, 255, 0.08);
+  --card-bg: #ffffff;
+  --card-warm-bg: linear-gradient(to right, #FFE3F9, #FFFFFF);
+  --card-warm-divider: #f0c0e8;
+  --bg-from: #ECE3FF;
+  --bg-mid: #EEF9FC;
+  --bg-to: #E6EFFF;
+  --nav-bg: #ffffff;
   --text-primary: #3d3d3d;
   --text-secondary: #9e9e9e;
+  --text-card: #57534e; /* stone-600 */
+  --text-muted: #a8a29e; /* stone-400 */
+  --border-subtle: #e7e5e4; /* stone-200 */
+  --section-bg: #ffffff;
+}
+
+.theme-hamnet {
+  --accent: #8C5535;
+  --accent-hot: #7A2020;
+  --accent-cool: #506050;
+  --accent-green: #4A7055;
+  --title-from: #E0D0C0;
+  --title-to: #8C5535;
+  --glass-bg: rgba(30, 22, 14, 0.65);
+  --glass-shadow: rgba(128, 80, 48, 0.18);
+  --card-bg: #2A2018;
+  --card-warm-bg: linear-gradient(to right, #3A1A14, #2A2018);
+  --card-warm-divider: #5A2A20;
+  --bg-from: #1E1A14;
+  --bg-mid: #231810;
+  --bg-to: #181E14;
+  --nav-bg: #2A2018;
+  --text-primary: #E0D0C0;
+  --text-secondary: #A09080;
+  --text-card: #D0C0A8;
+  --text-muted: #907860;
+  --border-subtle: #3A3020;
+  --section-bg: #2A2018;
 }
 
 @theme inline {
-  --color-background: var(--bg);
+  --color-background: var(--bg-from);
   --color-foreground: var(--text-primary);
   --font-sans: var(--font-geist-sans);
 }
@@ -50,7 +89,7 @@ button:active, a[href]:active {
 }
 
 body {
-  background: linear-gradient(to bottom, #ECE3FF 0%, #EEF9FC 52%, #E6EFFF 100%);
+  background: linear-gradient(to bottom, var(--bg-from) 0%, var(--bg-mid) 52%, var(--bg-to) 100%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;

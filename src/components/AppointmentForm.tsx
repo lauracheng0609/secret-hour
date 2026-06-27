@@ -204,7 +204,7 @@ export default function AppointmentForm({ initial, onDirtyChange }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <section className="bg-white rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
         <h2 className="text-sm font-semibold text-stone-500">選擇師傅</h2>
         <div className="flex flex-wrap gap-2">
           {therapists.map((t) => (
@@ -224,7 +224,7 @@ export default function AppointmentForm({ initial, onDirtyChange }: Props) {
         </div>
       </section>
 
-      <section className="bg-white rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
         <h2 className="text-sm font-semibold text-stone-500">預約資訊</h2>
         <div className="grid grid-cols-2 gap-3">
           <div>
@@ -286,7 +286,7 @@ export default function AppointmentForm({ initial, onDirtyChange }: Props) {
       </section>
 
       {therapist && (
-        <section className="bg-white rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
+        <section className="rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-stone-500">服務項目</h2>
 
           {baseItems.map((fi) => (
@@ -347,7 +347,7 @@ export default function AppointmentForm({ initial, onDirtyChange }: Props) {
         </section>
       )}
 
-      <section className="bg-white rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm border border-pink-50 flex flex-col gap-3">
         <h2 className="text-sm font-semibold text-stone-500">金額計算</h2>
         {selectedItems.map((fi) => (
           <div key={fi.feeItemId} className="flex justify-between text-sm text-stone-600">
@@ -380,7 +380,7 @@ export default function AppointmentForm({ initial, onDirtyChange }: Props) {
         </div>
       </section>
 
-      <section className="bg-white rounded-2xl p-4 shadow-sm border border-pink-50">
+      <section className="rounded-2xl p-4 shadow-sm border border-pink-50">
         <label className="text-xs text-stone-400 mb-1 block">備註</label>
         <textarea
           value={note}

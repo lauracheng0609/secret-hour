@@ -38,7 +38,7 @@ function ItemRow({
         value={item.label}
         onChange={(e) => onUpdate("label", e.target.value)}
         placeholder={item.type === "timeunit" ? "加時服務名稱" : "服務項目名稱"}
-        className="flex-1 border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
+        className="flex-1 border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
       />
       {item.type === "timeunit" && (
         <div className="flex items-center border border-stone-200 rounded-xl px-2 py-2 gap-1 w-24">
@@ -201,7 +201,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             >
               <option value="">未設定（預設藍）</option>
               <option value="#FF4894">🩷 桃紅</option>
-              <option value="#8D6AFF">🧡 珊瑚橘</option>
+              <option value="var(--accent)">🧡 珊瑚橘</option>
               <option value="#f472b6">💗 粉紫</option>
               <option value="#fb7185">❤️ 玫瑰</option>
               <option value="#a78bfa">💜 薰衣草</option>
@@ -216,7 +216,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       </div>
 
       {/* Basic info */}
-      <section className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
         <h2 className="text-sm font-semibold text-stone-500">基本資料</h2>
         <div>
           <label className="text-xs text-stone-400 mb-1 block">師傅名稱 *</label>
@@ -224,7 +224,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={name}
             onChange={(e) => { markDirty(); setName(e.target.value); }}
             placeholder="例：王小明"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
             required
           />
         </div>
@@ -234,7 +234,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={nickname}
             onChange={(e) => { markDirty(); setNickname(e.target.value); }}
             placeholder="例：小可愛"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
           />
         </div>
         <div>
@@ -243,7 +243,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={contact}
             onChange={(e) => { markDirty(); setContact(e.target.value); }}
             placeholder="LINE ID、電話等"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
           />
         </div>
         <div>
@@ -252,7 +252,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             value={note}
             onChange={(e) => { markDirty(); setNote(e.target.value); }}
             placeholder="其他補充"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
           />
         </div>
         <div>
@@ -261,12 +261,12 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             type="date"
             value={anniversaryDate}
             onChange={(e) => { markDirty(); setAnniversaryDate(e.target.value); }}
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
           />
           {anniversaryDate && (() => {
             const days = Math.floor((Date.now() - new Date(anniversaryDate).getTime()) / (1000 * 60 * 60 * 24));
             return days >= 0 ? (
-              <p className="text-xs mt-1.5 font-medium" style={{ color: "#8D6AFF" }}>
+              <p className="text-xs mt-1.5 font-medium" style={{ color: "var(--accent)" }}>
                 我與這個師傅已經相遇 {days} 天 ♥
               </p>
             ) : null;
@@ -275,16 +275,16 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       </section>
 
       {/* Base fee */}
-      <section className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
         <h2 className="text-sm font-semibold text-stone-500">基礎服務（必選）</h2>
         {baseItems.map((fi) => (
           <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={baseItems.length > 1} />
         ))}
-        <button type="button" onClick={() => addItem("base")} className="text-xs text-left" style={{ color: "#8D6AFF" }}>＋ 新增基礎項目</button>
+        <button type="button" onClick={() => addItem("base")} className="text-xs text-left" style={{ color: "var(--accent)" }}>＋ 新增基礎項目</button>
       </section>
 
       {/* Time unit */}
-      <section className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-stone-500">加時服務</h2>
           <span className="text-[10px] text-stone-400 bg-stone-50 border border-stone-100 px-2 py-0.5 rounded-full">單位時間計費</span>
@@ -293,21 +293,21 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
         {timeItems.map((fi) => (
           <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={true} />
         ))}
-        <button type="button" onClick={() => addItem("timeunit")} className="text-xs text-left" style={{ color: "#8D6AFF" }}>＋ 新增加時項目</button>
+        <button type="button" onClick={() => addItem("timeunit")} className="text-xs text-left" style={{ color: "var(--accent)" }}>＋ 新增加時項目</button>
       </section>
 
       {/* Add-ons */}
-      <section className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
         <h2 className="text-sm font-semibold text-stone-500">加購項目（可選）</h2>
         {addonItems.length === 0 && <p className="text-xs text-stone-300">尚未設定</p>}
         {addonItems.map((fi) => (
           <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={true} />
         ))}
-        <button type="button" onClick={() => addItem("addon")} className="text-xs text-left" style={{ color: "#8D6AFF" }}>＋ 新增加購項目</button>
+        <button type="button" onClick={() => addItem("addon")} className="text-xs text-left" style={{ color: "var(--accent)" }}>＋ 新增加購項目</button>
       </section>
 
       {/* Deposit */}
-      <section className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
         <h2 className="text-sm font-semibold text-stone-500">訂金設定</h2>
         <div className="flex items-center border border-stone-200 rounded-xl px-3 py-2 gap-1">
           <span className="text-xs text-stone-400">NT$</span>
@@ -324,7 +324,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       <button
         type="submit"
         className="text-white rounded-2xl py-3 font-semibold text-sm shadow-md"
-        style={{ background: "#8D6AFF", boxShadow: "0 4px 12px #8D6AFF44" }}
+        style={{ background: "var(--accent)", boxShadow: "0 4px 12px #8D6AFF44" }}
       >
         儲存師傅資料
       </button>
