@@ -21,7 +21,7 @@ function Avatar({ src, name }: { src?: string; name: string }) {
   );
 }
 
-function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: WishItem) => void; onDelete: (id: string) => void }) {
+function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave: (w: WishItem) => void; onDelete: (id: string) => void; onCancel?: () => void }) {
   const [editing, setEditing] = useState(item.place === "");
   const [place, setPlace] = useState(item.place);
   const [address, setAddress] = useState(item.address ?? "");
@@ -110,9 +110,12 @@ function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: Wish
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70 resize-none" />
           <div className="flex gap-2">
             <button onClick={handleSave} className="flex-1 py-2 rounded-xl text-sm font-medium text-white" style={{ background: "#8D6AFF" }}>儲存</button>
-            {item.place !== "" && (
-              <button onClick={() => setEditing(false)} className="px-4 py-2 rounded-xl text-sm text-stone-400 border border-stone-200">取消</button>
-            )}
+            <button
+              onClick={() => item.place !== "" ? setEditing(false) : onCancel?.()}
+              className="px-4 py-2 rounded-xl text-sm text-stone-400 border border-stone-200"
+            >
+              取消
+            </button>
           </div>
           {item.place !== "" && (
             <button onClick={() => onDelete(item.id)} className="w-full text-sm text-red-400 text-center py-1">
@@ -265,7 +268,8 @@ export default function TherapistsPage() {
           ) : (
             <div className="flex flex-col gap-3">
               {wishes.map((w) => (
-                <WishCard key={w.id} item={w} onSave={handleSaveWish} onDelete={handleDeleteWish} />
+                <WishCard key={w.id} item={w} onSave={handleSaveWish} onDelete={handleDeleteWish}
+                  onCancel={w.place === "" ? () => setWishes((prev) => prev.filter((x) => x.id !== w.id)) : undefined} />
               ))}
             </div>
           )}
