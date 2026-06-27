@@ -130,13 +130,10 @@ function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: Wish
       {item.photo && (
         <div className="relative h-36" style={{ background: `url(${item.photo}) center/cover` }}>
           <div className="absolute inset-0 bg-white/40" />
-          <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between">
-            <p className="font-bold text-stone-700 text-lg drop-shadow-sm">📍 {item.place}</p>
-          </div>
         </div>
       )}
       <div className="p-4 flex flex-col gap-2">
-        {!item.photo && <p className="font-semibold text-stone-700 text-base">📍 {item.place}</p>}
+        <p className="font-semibold text-stone-700 text-base">📍 {item.place}</p>
         {item.address && <p className="text-xs text-stone-500">🗺 {item.address}</p>}
         {item.url && (
           <a href={item.url} target="_blank" rel="noopener noreferrer"
