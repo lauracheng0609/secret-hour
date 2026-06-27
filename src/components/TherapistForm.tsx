@@ -95,6 +95,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
   const [avatar, setAvatar] = useState<string | undefined>(initial?.avatar);
   const [isFavorite, setIsFavorite] = useState(initial?.isFavorite ?? false);
   const [calendarColor, setCalendarColor] = useState(initial?.calendarColor ?? "");
+  const [anniversaryDate, setAnniversaryDate] = useState(initial?.anniversaryDate ?? "");
   const [depositAmount, setDepositAmount] = useState(initial?.depositAmount ?? 0);
   const [feeItems, setFeeItems] = useState<FeeItem[]>(
     initial?.feeItems.map((fi) => ({ ...fi, type: fi.type ?? (fi.isBase ? "base" : "addon") })) ??
@@ -137,6 +138,7 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       avatar,
       isFavorite,
       calendarColor: calendarColor || undefined,
+      anniversaryDate: anniversaryDate || undefined,
       depositAmount,
       feeItems: feeItems.filter((fi) => fi.label.trim()),
       createdAt: initial?.createdAt ?? new Date().toISOString(),
@@ -252,6 +254,23 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
             placeholder="其他補充"
             className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
           />
+        </div>
+        <div>
+          <label className="text-xs text-stone-400 mb-1 block">我與師傅的紀念日</label>
+          <input
+            type="date"
+            value={anniversaryDate}
+            onChange={(e) => { markDirty(); setAnniversaryDate(e.target.value); }}
+            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#8D6AFF]"
+          />
+          {anniversaryDate && (() => {
+            const days = Math.floor((Date.now() - new Date(anniversaryDate).getTime()) / (1000 * 60 * 60 * 24));
+            return days >= 0 ? (
+              <p className="text-xs mt-1.5 font-medium" style={{ color: "#8D6AFF" }}>
+                我與這個師傅已經相遇 {days} 天 ♥
+              </p>
+            ) : null;
+          })()}
         </div>
       </section>
 

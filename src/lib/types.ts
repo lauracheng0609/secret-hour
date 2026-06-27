@@ -19,6 +19,7 @@ export interface Therapist {
   isFavorite?: boolean;
   calendarColor?: string;
   memo?: string;
+  anniversaryDate?: string;
   feeItems: FeeItem[];
   depositAmount: number;
   createdAt: string;
