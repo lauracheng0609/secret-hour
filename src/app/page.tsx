@@ -49,7 +49,7 @@ function CalendarView({ appointments, therapists }: { appointments: Appointment[
   ];
 
   return (
-    <div className="bg-white rounded-3xl p-5 shadow-sm">
+    <div className="rounded-3xl p-5" style={{ background: "rgba(255,255,255,0.55)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "0 4px 24px rgba(141,106,255,0.08)" }}>
       {/* Month nav */}
       <div className="flex items-center justify-between mb-4">
         <button onClick={prev} className="w-8 h-8 flex items-center justify-center rounded-full text-stone-400 hover:bg-stone-50">‹</button>
