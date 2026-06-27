@@ -166,7 +166,13 @@ function scheduleNotifications(appointments: Appointment[]) {
 export default function HomePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [therapists, setTherapists] = useState<Therapist[]>([]);
+  const [toast, setToast] = useState(false);
   const importRef = useRef<HTMLInputElement>(null);
+
+  function showToast() {
+    setToast(true);
+    setTimeout(() => setToast(false), 2200);
+  }
 
   function reload() {
     const appts = getAppointments();
@@ -215,7 +221,7 @@ export default function HomePage() {
             </svg>
           </button>
           <input ref={importRef} type="file" accept=".json" className="hidden"
-            onChange={(e) => handleImport(e, reload)} />
+            onChange={(e) => handleImport(e, () => { reload(); showToast(); })} />
         </div>
       </div>
       <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, #8E4DC8, #DABAE8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Secret Hour</h1>
@@ -296,6 +302,14 @@ export default function HomePage() {
         </section>
       )}
 
+      {toast && (
+        <div
+          className="fixed bottom-28 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-full text-sm font-medium text-white shadow-lg z-50 pointer-events-none"
+          style={{ background: "#8D6AFF", animation: "fadeSlideUp 0.3s ease both" }}
+        >
+          ✓ 匯入成功
+        </div>
+      )}
     </main>
   );
 }
