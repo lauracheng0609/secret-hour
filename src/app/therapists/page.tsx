@@ -241,6 +241,10 @@ export default function TherapistsPage() {
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-lg text-stone-700 leading-tight">{t.name}</p>
                       {t.nickname && <p className="text-sm text-stone-400">{t.nickname}</p>}
+                      {t.anniversaryDate && (() => {
+                        const days = Math.floor((Date.now() - new Date(t.anniversaryDate).getTime()) / (1000 * 60 * 60 * 24));
+                        return days >= 0 ? <p className="text-xs font-medium mt-0.5" style={{ color: "#8D6AFF" }}>相遇 {days} 天 ♥</p> : null;
+                      })()}
                     </div>
                     <Link href={`/therapists/${t.id}`} className="text-sm font-medium text-white px-4 py-1.5 rounded-full shrink-0" style={{ background: "#8D6AFF" }}>
                       編輯
