@@ -114,6 +114,11 @@ function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: Wish
               <button onClick={() => setEditing(false)} className="px-4 py-2 rounded-xl text-sm text-stone-400 border border-stone-200">取消</button>
             )}
           </div>
+          {item.place !== "" && (
+            <button onClick={() => onDelete(item.id)} className="w-full text-sm text-red-400 text-center py-1">
+              刪除這個許願
+            </button>
+          )}
         </div>
       </div>
     );
@@ -142,6 +147,11 @@ function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: Wish
         {item.memo && <p className="text-xs text-stone-400 whitespace-pre-wrap">{item.memo}</p>}
 
         <div className="flex gap-2 mt-1">
+          <button onClick={() => setEditing(true)}
+            className="text-xs font-medium text-white px-4 py-1.5 rounded-full"
+            style={{ background: "#8D6AFF" }}>
+            編輯
+          </button>
           <button onClick={handleShareLine}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white"
             style={{ background: "#06C755" }}>
@@ -150,8 +160,6 @@ function WishCard({ item, onSave, onDelete }: { item: WishItem; onSave: (w: Wish
             </svg>
             分享到 LINE
           </button>
-          <button onClick={() => setEditing(true)} className="text-xs px-3 py-1.5 rounded-full border border-purple-200 text-purple-500">編輯</button>
-          <button onClick={() => onDelete(item.id)} className="text-xs px-3 py-1.5 rounded-full border border-red-100 text-red-400">刪除</button>
         </div>
       </div>
     </div>
