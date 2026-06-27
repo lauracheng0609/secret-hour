@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "@/lib/theme";
 
 export default function BottomNav() {
   const pathname = usePathname();
+  useTheme(); // apply saved theme on every page
 
   const isCalendar = pathname === "/schedule";
   const isHome = pathname === "/";
