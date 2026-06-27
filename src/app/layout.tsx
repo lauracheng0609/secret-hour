@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-TW" className={`${geist.variable} h-full`}>
+    <html lang="zh-TW" className={`${geist.variable} h-full`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
           (function(){var t=localStorage.getItem('sh_theme');if(t)document.documentElement.classList.add('theme-'+t);})();
