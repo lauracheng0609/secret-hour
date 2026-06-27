@@ -88,9 +88,13 @@ button:active, a[href]:active {
   opacity: 0.85;
 }
 
-body {
+html {
   background: linear-gradient(to bottom, var(--bg-from) 0%, var(--bg-mid) 52%, var(--bg-to) 100%);
   background-attachment: fixed;
+  min-height: 100%;
+}
+
+body {
   color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
   max-width: 480px;
