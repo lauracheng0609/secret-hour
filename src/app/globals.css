@@ -39,6 +39,16 @@
   transform-origin: center;
 }
 
+/* Button press feedback */
+button, a[href] {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+button:active, a[href]:active {
+  transform: scale(0.94);
+  opacity: 0.85;
+}
+
 body {
   background: linear-gradient(to bottom, #ECE3FF 0%, #EEF9FC 52%, #E6EFFF 100%);
   background-attachment: fixed;
