@@ -23,6 +23,11 @@
   --text-muted: #a8a29e; /* stone-400 */
   --border-subtle: #e7e5e4; /* stone-200 */
   --section-bg: #ffffff;
+  --input-bg: rgba(255,255,255,0.7);
+  --input-text: #44403c;
+  --input-placeholder: #a8a29e;
+  --upload-bg: #f3f0ff;
+  --upload-icon: #c4b5fd;
 }
 
 .theme-hamnet {
@@ -41,6 +46,11 @@
   --bg-mid: #363828;
   --bg-to: #506050;
   --nav-bg: #2A2018;
+  --input-bg: rgba(60,50,35,0.6);
+  --input-text: #D0C0A0;
+  --input-placeholder: #907860;
+  --upload-bg: #2A3028;
+  --upload-icon: #6A8060;
   --text-primary: #E0D0C0;
   --text-secondary: #A09080;
   --text-card: #D0C0A8;
@@ -76,6 +86,11 @@
   animation: heartbeat 1.6s ease-in-out infinite;
   display: inline-block;
   transform-origin: center;
+}
+
+/* Themed placeholder */
+input::placeholder, textarea::placeholder {
+  color: var(--input-placeholder);
 }
 
 /* Button press feedback */

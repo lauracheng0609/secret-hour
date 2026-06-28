@@ -69,11 +69,11 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
         {/* Photo preview */}
         <div
           className="relative h-28 flex items-center justify-center cursor-pointer"
-          style={{ background: photo ? `url(${photo}) center/cover` : "#f3f0ff" }}
+          style={{ background: photo ? `url(${photo}) center/cover` : "var(--upload-bg)" }}
           onClick={() => fileRef.current?.click()}
         >
           {photo && <div className="absolute inset-0 bg-white/40" />}
-          <div className="relative flex flex-col items-center gap-1 text-purple-300">
+          <div className="relative flex flex-col items-center gap-1" style={{ color: "var(--upload-icon)" }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M21 15V19a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -84,19 +84,22 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
 
         <div className="p-4 flex flex-col gap-3">
           <input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="地點名稱 *"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70" autoFocus />
+            className="w-full border rounded-xl px-3 py-2 text-sm focus:outline-none"
+            style={{ background: "var(--input-bg)", color: "var(--input-text)", borderColor: "var(--border-subtle)" }} autoFocus />
 
           {/* Address autocomplete */}
           <div className="relative">
             <input value={address} onChange={(e) => handleAddressChange(e.target.value)}
               onBlur={() => setTimeout(() => setSuggestions([]), 150)}
               placeholder="地址（選填）"
-              className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70" />
+              className="w-full border rounded-xl px-3 py-2 text-sm focus:outline-none"
+              style={{ background: "var(--input-bg)", color: "var(--input-text)", borderColor: "var(--border-subtle)" }} />
             {suggestions.length > 0 && (
-              <ul className="absolute z-50 left-0 right-0 bg-white border border-stone-100 rounded-xl shadow-lg mt-1 overflow-hidden">
+              <ul className="absolute z-50 left-0 right-0 border rounded-xl shadow-lg mt-1 overflow-hidden" style={{ background: "var(--section-bg)", borderColor: "var(--border-subtle)" }}>
                 {suggestions.map((s, i) => (
                   <li key={i} onMouseDown={() => { setAddress(s); setSuggestions([]); }}
-                    className="px-3 py-2.5 text-sm text-stone-600 hover:bg-purple-50 cursor-pointer border-b border-stone-50 last:border-0 truncate">
+                    className="px-3 py-2.5 text-sm cursor-pointer border-b last:border-0 truncate"
+                    style={{ color: "var(--text-card)", borderColor: "var(--border-subtle)" }}>
                     📍 {s}
                   </li>
                 ))}
@@ -105,9 +108,11 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
           </div>
 
           <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="參考網址（選填）"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70" />
+            className="w-full border rounded-xl px-3 py-2 text-sm focus:outline-none"
+            style={{ background: "var(--input-bg)", color: "var(--input-text)", borderColor: "var(--border-subtle)" }} />
           <textarea value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="備忘（選填）" rows={2}
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-300 bg-white/70 resize-none" />
+            className="w-full border rounded-xl px-3 py-2 text-sm focus:outline-none resize-none"
+            style={{ background: "var(--input-bg)", color: "var(--input-text)", borderColor: "var(--border-subtle)" }} />
           <div className="flex gap-2">
             <button onClick={handleSave} className="flex-1 py-2 rounded-xl text-sm font-medium text-white" style={{ background: "var(--accent)" }}>儲存</button>
             <button
