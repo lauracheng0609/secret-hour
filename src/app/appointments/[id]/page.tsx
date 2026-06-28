@@ -81,7 +81,7 @@ export default function AppointmentDetailPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm flex items-center gap-1 underline underline-offset-2"
-              style={{ color: "#8D6AFF" }}
+              style={{ color: "var(--accent)" }}
             >
               📍 {appointment.location}
             </a>
@@ -118,7 +118,7 @@ export default function AppointmentDetailPage() {
         <button
           onClick={handleShareLine}
           className="flex items-center justify-center gap-2 rounded-2xl py-3 font-medium text-sm text-white"
-          style={{ background: "#06C755" }}
+          style={{ background: "var(--accent-green)" }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
             <path d="M12 2C6.48 2 2 6.03 2 11c0 2.7 1.23 5.12 3.18 6.79L4 22l4.43-1.47C9.55 20.83 10.75 21 12 21c5.52 0 10-4.03 10-9S17.52 2 12 2zm1 13H9v-1.5h4V15zm2-3H9v-1.5h6V12zm0-3H9V7.5h6V9z"/>
@@ -129,7 +129,7 @@ export default function AppointmentDetailPage() {
         <button
           onClick={() => router.push(`/appointments/new?copyFrom=${id}`)}
           className="flex items-center justify-center gap-2 rounded-2xl py-3 font-medium text-sm text-white"
-          style={{ background: "#8D6AFF" }}
+          style={{ background: "var(--accent)" }}
         >
           ♥ 再約一次
         </button>
