@@ -107,7 +107,19 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
     if (!file) return;
     markDirty();
     const reader = new FileReader();
-    reader.onload = (ev) => setAvatar(ev.target?.result as string);
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 400;
+        const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+        setAvatar(canvas.toDataURL("image/jpeg", 0.8));
+      };
+      img.src = ev.target?.result as string;
+    };
     reader.readAsDataURL(file);
   }
 
