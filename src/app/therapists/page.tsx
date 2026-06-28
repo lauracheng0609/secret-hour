@@ -27,30 +27,8 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
   const [address, setAddress] = useState(item.address ?? "");
   const [url, setUrl] = useState(item.url ?? "");
   const [memo, setMemo] = useState(item.memo ?? "");
-  const [photo, setPhoto] = useState(item.photo);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const img = new Image();
-      img.onload = () => {
-        const MAX = 800;
-        const scale = Math.min(1, MAX / Math.max(img.width, img.height));
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
-        canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
-        setPhoto(canvas.toDataURL("image/jpeg", 0.7));
-      };
-      img.src = ev.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
 
   function handleAddressChange(val: string) {
     setAddress(val);
@@ -64,7 +42,7 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
 
   function handleSave() {
     if (!place.trim()) return;
-    onSave({ ...item, place: place.trim(), address: address.trim() || undefined, url: url.trim() || undefined, memo: memo.trim() || undefined, photo });
+    onSave({ ...item, place: place.trim(), address: address.trim() || undefined, url: url.trim() || undefined, memo: memo.trim() || undefined });
     setEditing(false);
   }
 
@@ -78,22 +56,6 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
   if (editing) {
     return (
       <div className="rounded-2xl overflow-hidden" style={GLASS}>
-        {/* Photo preview */}
-        <div
-          className="relative h-28 flex items-center justify-center cursor-pointer"
-          style={{ background: photo ? `url(${photo}) center/cover` : "var(--upload-bg)" }}
-          onClick={() => fileRef.current?.click()}
-        >
-          {photo && <div className="absolute inset-0 bg-white/40" />}
-          <div className="relative flex flex-col items-center gap-1" style={{ color: "var(--upload-icon)" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M21 15V19a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span className="text-xs">{photo ? "更換底圖" : "上傳底圖"}</span>
-          </div>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
-        </div>
-
         <div className="p-4 flex flex-col gap-3">
           <input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="地點名稱 *"
             className="w-full border rounded-xl px-3 py-2 text-sm focus:outline-none"
@@ -146,17 +108,6 @@ function WishCard({ item, onSave, onDelete, onCancel }: { item: WishItem; onSave
 
   return (
     <div className="rounded-2xl overflow-hidden transition-opacity" style={{ ...GLASS, opacity: item.isRealized ? 0.5 : 1 }}>
-      {/* Photo background */}
-      {item.photo && (
-        <div className="relative h-36" style={{ background: `url(${item.photo}) center/cover` }}>
-          <div className="absolute inset-0 bg-white/40" />
-          {item.isRealized && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-5xl">✨</span>
-            </div>
-          )}
-        </div>
-      )}
       <div className="p-4 flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <p className={`font-semibold text-base flex-1 ${item.isRealized ? "line-through text-stone-400" : "text-stone-700"}`}>📍 {item.place}</p>
