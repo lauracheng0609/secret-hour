@@ -1,118 +1,160 @@
 @import "tailwindcss";
 
+/* ── Design Tokens ── */
 :root {
-  /* Purple theme (default) */
-  --accent: #8D6AFF;
-  --accent-hot: #FF4894;
-  --accent-cool: #5b9bd5;
+  /* Brand gradients */
+  --grad-primary:   linear-gradient(135deg, #9F86F2, #E88BC4);
+  --grad-title:     linear-gradient(100deg, #8B72E8 10%, #C77BD4 55%, #EF87B8 95%);
+  --grad-pink-cta:  linear-gradient(135deg, #F179AE, #C77BD4);
+  --grad-blue-date: linear-gradient(135deg, #6FA3E8, #8B72E8);
+  --grad-pink-date: linear-gradient(135deg, #EF6DA8, #C77BD4);
+
+  /* Legacy accent vars (used by forms & misc components) */
+  --accent:       #8B72E8;
+  --accent-hot:   #EF6DA8;
+  --accent-cool:  #6FA3E8;
   --accent-green: #06C755;
-  --title-from: #8E4DC8;
-  --title-to: #DABAE8;
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-shadow: rgba(141, 106, 255, 0.08);
-  --card-bg: #ffffff;
-  --card-warm-bg: linear-gradient(to right, #FFE3F9, #FFFFFF);
-  --card-warm-divider: #f0c0e8;
-  --bg-from: #ECE3FF;
-  --bg-mid: #EEF9FC;
-  --bg-to: #E6EFFF;
-  --nav-bg: #ffffff;
-  --text-primary: #3d3d3d;
-  --text-secondary: #9e9e9e;
-  --text-card: #57534e; /* stone-600 */
-  --text-muted: #a8a29e; /* stone-400 */
-  --border-subtle: #e7e5e4; /* stone-200 */
-  --section-bg: #ffffff;
-  --input-bg: rgba(255,255,255,0.7);
-  --input-text: #44403c;
-  --input-placeholder: #a8a29e;
-  --upload-bg: #f3f0ff;
-  --upload-icon: #c4b5fd;
+
+  /* Title gradient */
+  --title-from: #8B72E8;
+  --title-to:   #EF87B8;
+
+  /* Typography */
+  --ink:          #3E3558;
+  --ink-section:  #4A4066;
+  --text-primary: #3E3558;
+  --text-secondary: #8A81A3;
+  --text-muted:   #A29BB8;
+  --text-faint:   #B4AECC;
+  --text-card:    #3E3558;
+
+  /* Glass recipe */
+  --glass-bg:          rgba(255,255,255,0.5);
+  --glass-border:      rgba(255,255,255,0.8);
+  --glass-blur:        blur(24px) saturate(160%);
+  --glass-shadow:      0 12px 36px rgba(124,98,214,0.12);
+  --glass-shadow-pink: 0 12px 36px rgba(214,98,168,0.14);
+
+  /* Card variants */
+  --card-bg:           rgba(255,255,255,0.5);
+  --card-warm-bg:      linear-gradient(120deg,rgba(247,191,221,0.5) 0%,transparent 55%),rgba(255,255,255,0.5);
+  --card-warm-divider: rgba(239,109,168,0.25);
+  --section-bg:        rgba(255,255,255,0.5);
+  --nav-bg:            rgba(255,255,255,0.72);
+  --border-subtle:     rgba(255,255,255,0.8);
+
+  /* Inputs */
+  --input-bg:          rgba(255,255,255,0.7);
+  --input-text:        #3E3558;
+  --input-placeholder: #A29BB8;
+  --upload-bg:         #f0eeff;
+  --upload-icon:       #c4b5fd;
 }
 
+/* ── Hamnet Dark Theme ── */
 .theme-hamnet {
-  --accent: #8C5535;
-  --accent-hot: #7A2020;
-  --accent-cool: #506050;
+  --accent:       #8C5535;
+  --accent-hot:   #7A2020;
+  --accent-cool:  #506050;
   --accent-green: #4A7055;
-  --title-from: #E0D0C0;
-  --title-to: #8C5535;
-  --glass-bg: rgba(30, 22, 14, 0.65);
-  --glass-shadow: rgba(128, 80, 48, 0.18);
-  --card-bg: #2A2018;
-  --card-warm-bg: linear-gradient(to right, #3A1A14, #2A2018);
-  --card-warm-divider: #5A2A20;
-  --bg-from: #202010;
-  --bg-mid: #363828;
-  --bg-to: #506050;
-  --nav-bg: #2A2018;
-  --input-bg: rgba(60,50,35,0.6);
-  --input-text: #D0C0A0;
-  --input-placeholder: #907860;
-  --upload-bg: #2A3028;
-  --upload-icon: #6A8060;
+  --title-from:   #E0D0C0;
+  --title-to:     #8C5535;
+  --ink:          #E0D0C0;
+  --ink-section:  #D0C0A0;
   --text-primary: #E0D0C0;
   --text-secondary: #A09080;
-  --text-card: #D0C0A8;
-  --text-muted: #907860;
-  --border-subtle: #3A3020;
-  --section-bg: #2A2018;
+  --text-muted:   #907860;
+  --text-faint:   #706050;
+  --text-card:    #D0C0A8;
+  --glass-bg:          rgba(30,22,14,0.65);
+  --glass-border:      rgba(80,60,40,0.4);
+  --glass-shadow:      0 12px 36px rgba(128,80,48,0.18);
+  --glass-shadow-pink: 0 12px 36px rgba(128,80,48,0.18);
+  --card-bg:           #2A2018;
+  --card-warm-bg:      linear-gradient(to right, #3A1A14, #2A2018);
+  --card-warm-divider: #5A2A20;
+  --section-bg:        #2A2018;
+  --nav-bg:            #2A2018;
+  --border-subtle:     #3A3020;
+  --input-bg:          rgba(60,50,35,0.6);
+  --input-text:        #D0C0A0;
+  --input-placeholder: #907860;
+  --upload-bg:         #2A3028;
+  --upload-icon:       #6A8060;
 }
 
-@theme inline {
-  --color-background: var(--bg-from);
-  --color-foreground: var(--text-primary);
-  --font-sans: var(--font-geist-sans);
+/* ── Background ── */
+html {
+  background-color: #F7F5FC;
+  min-height: 100%;
+}
+/* Blob gradients fixed to viewport */
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at -8% -5%,  rgba(201,180,247,0.72) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 45% at 110% 10%, rgba(247,191,221,0.68) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 112%, rgba(183,214,248,0.62) 0%, transparent 65%);
+}
+/* Hamnet: solid dark gradient, no blobs */
+.theme-hamnet {
+  background: #202010;
+}
+.theme-hamnet::before {
+  background: linear-gradient(160deg, #202010 0%, #363828 55%, #506050 100%);
 }
 
+body {
+  color: var(--text-primary);
+  font-family: var(--font-noto, "Noto Sans TC"), Arial, sans-serif;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+}
+
+/* ── Shared glass class ── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  border-radius: 26px;
+}
+.glass-pink {
+  background: var(--card-warm-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow-pink);
+  border-radius: 26px;
+}
+
+/* ── Animations ── */
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
+  0%,100% { transform: scale(1); }
   14% { transform: scale(1.3); }
   28% { transform: scale(1); }
   42% { transform: scale(1.2); }
   56% { transform: scale(1); }
 }
-
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+.card-enter  { animation: fadeSlideUp 0.4s ease both; }
+.heartbeat   { animation: heartbeat 1.6s ease-in-out infinite; display: inline-block; transform-origin: center; }
 
-.card-enter {
-  animation: fadeSlideUp 0.4s ease both;
-}
+/* ── Placeholder ── */
+input::placeholder, textarea::placeholder { color: var(--input-placeholder); }
 
-.heartbeat {
-  animation: heartbeat 1.6s ease-in-out infinite;
-  display: inline-block;
-  transform-origin: center;
-}
-
-/* Themed placeholder */
-input::placeholder, textarea::placeholder {
-  color: var(--input-placeholder);
-}
-
-/* Button press feedback */
+/* ── Button press ── */
 button, a[href] {
   -webkit-tap-highlight-color: transparent;
   transition: transform 0.12s ease, opacity 0.12s ease;
 }
-button:active, a[href]:active {
-  transform: scale(0.94);
-  opacity: 0.85;
-}
-
-html {
-  background: linear-gradient(to bottom, var(--bg-from) 0%, var(--bg-mid) 52%, var(--bg-to) 100%);
-  background-attachment: fixed;
-  min-height: 100%;
-}
-
-body {
-  color: var(--text-primary);
-  font-family: Arial, Helvetica, sans-serif;
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100dvh;
-}
+button:active, a[href]:active { transform: scale(0.94); opacity: 0.85; }

@@ -4,127 +4,61 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getAppointments, getTherapists } from "@/lib/storage";
 import { Appointment, Therapist } from "@/lib/types";
-
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-function AppointmentCard({ appt, therapists }: { appt: Appointment; therapists: Therapist[] }) {
-  const apptTime = new Date(`${appt.date}T${appt.time}`);
-  const now = new Date();
-  const isPast = apptTime < now;
-  const isWithinWeek = !isPast && apptTime.getTime() - now.getTime() <= 10 * 24 * 60 * 60 * 1000;
-
-  const d = new Date(appt.date);
-  const dateColor = isWithinWeek ? "var(--accent-hot)" : "var(--accent-cool)";
-
-  return (
-    <Link href={`/appointments/${appt.id}`}>
-      <div
-        className={`rounded-2xl shadow-sm flex items-center overflow-hidden ${isPast ? "opacity-50" : ""}`}
-        style={{
-          background: isWithinWeek ? "var(--card-warm-bg)" : "var(--card-bg)",
-        }}
-      >
-        {/* Date block */}
-        <div className="flex flex-col justify-center pl-5 pr-4 py-5 w-[96px] flex-shrink-0">
-          <span className="text-xs font-medium" style={{ color: dateColor }}>{d.getFullYear()}</span>
-          <span className="text-4xl font-bold leading-tight" style={{ color: dateColor }}>
-            {d.getMonth() + 1}/{d.getDate()}
-          </span>
-          <span className="text-xs font-medium mt-0.5" style={{ color: dateColor }}>
-            {WEEKDAYS[d.getDay()]}
-          </span>
-        </div>
-
-        {/* Divider */}
-        <div className="w-px self-stretch my-4" style={{ background: isWithinWeek ? "var(--card-warm-divider)" : "var(--border-subtle)" }} />
-
-        {/* Info */}
-        <div className="flex-1 min-w-0 px-4 py-5">
-          <div className="flex items-center gap-2 mb-0.5">
-            {(() => {
-              const t = therapists.find((t) => t.id === appt.therapistId);
-              return t?.avatar ? (
-                <img src={t.avatar} alt={t.name} className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="8" r="4" fill="#f9a8d4"/>
-                    <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke="#f9a8d4" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </div>
-              );
-            })()}
-            <span className="font-semibold text-stone-600 text-base">{appt.therapistName}</span>
-            {appt.status === "completed" && (
-              <span className="text-[10px] bg-stone-100 text-stone-400 px-2 py-0.5 rounded-full">已完成</span>
-            )}
-          </div>
-          <p className="text-xs text-stone-400 mt-1">時間：{appt.time}</p>
-          <p className="text-xs text-stone-400">地點：{appt.location || "尚未決定"}</p>
-        </div>
-
-        <div className="pr-4 flex flex-col items-center gap-2">
-          {isWithinWeek && (
-            <span className="heartbeat text-base" style={{ color: "var(--accent-hot)" }}>♥</span>
-          )}
-          <span className="text-xs font-medium text-white px-3 py-1 rounded-full" style={{ background: isWithinWeek ? "var(--accent-hot)" : "var(--accent)" }}>查看</span>
-        </div>
-      </div>
-    </Link>
-  );
-}
+import AppointmentCard from "@/components/AppointmentCard";
 
 function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapists: Therapist[]; onClose: () => void }) {
-  // build unique therapist list from past records
   const therapistOptions = Array.from(
     new Map(past.map((a) => [a.therapistId, a.therapistName])).entries()
   ).map(([id, name]) => ({ id, name }));
 
   const [selectedId, setSelectedId] = useState(therapistOptions[0]?.id ?? "");
-
   const filtered = past.filter((a) => a.therapistId === selectedId);
   const hasMultiple = therapistOptions.length > 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ maxWidth: 480, margin: "0 auto", left: 0, right: 0 }}>
-      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="relative rounded-t-3xl w-full max-h-[85dvh] flex flex-col shadow-2xl" style={{ background: "var(--section-bg)" }}>
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 flex-shrink-0">
-          <h2 className="text-base font-bold text-stone-700">全部歷史紀錄</h2>
-          <button onClick={onClose} className="text-stone-400 text-xl w-8 h-8 flex items-center justify-center">×</button>
+    <div style={{ position:"fixed", inset:0, zIndex:50, display:"flex", alignItems:"flex-end", justifyContent:"center", maxWidth:480, margin:"0 auto", left:0, right:0 }}>
+      <div style={{ position:"absolute", inset:0, background:"rgba(62,53,88,0.35)", backdropFilter:"blur(4px)" }} onClick={onClose} />
+      <div style={{
+        position:"relative", width:"100%", maxHeight:"85dvh", display:"flex", flexDirection:"column",
+        borderRadius:"28px 28px 0 0",
+        background:"rgba(255,255,255,0.75)", backdropFilter:"blur(28px) saturate(180%)",
+        WebkitBackdropFilter:"blur(28px) saturate(180%)",
+        border:"1px solid rgba(255,255,255,0.9)", borderBottom:"none",
+        boxShadow:"0 -8px 40px rgba(124,98,214,0.18)",
+      }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"20px 20px 12px", flexShrink:0 }}>
+          <span style={{ fontWeight:700, fontSize:15, color:"var(--ink-section)" }}>全部歷史紀錄</span>
+          <button onClick={onClose} style={{ width:32, height:32, display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, color:"var(--text-muted)", background:"none", border:"none" }}>×</button>
         </div>
 
-        {/* Stats row */}
-        <div className="px-5 pb-3 flex items-center justify-between gap-3 flex-shrink-0">
-          <p className="text-sm flex-1" style={{ color: "var(--accent)" }}>
-            已經跟 <span className="font-semibold">{therapistOptions.find((t) => t.id === selectedId)?.name}</span> 見面{" "}
-            <span className="font-semibold">{filtered.length}</span> 次囉❤️
+        <div style={{ padding:"0 20px 12px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, flexShrink:0 }}>
+          <p style={{ fontSize:13.5, flex:1, color:"var(--accent)" }}>
+            已經跟 <strong>{therapistOptions.find((t) => t.id === selectedId)?.name}</strong> 見面{" "}
+            <strong>{filtered.length}</strong> 次囉 ❤️
           </p>
-          <div className="relative flex-shrink-0">
-            <select
-              value={selectedId}
-              onChange={(e) => setSelectedId(e.target.value)}
-              disabled={!hasMultiple}
-              className="appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border focus:outline-none"
+          <div style={{ position:"relative", flexShrink:0 }}>
+            <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} disabled={!hasMultiple}
               style={{
-                borderColor: hasMultiple ? "var(--accent)" : "#d1d5db",
-                color: hasMultiple ? "var(--accent)" : "#9e9e9e",
-                background: "white",
-              }}
-            >
-              {therapistOptions.map((t) => (
-                <option key={t.id} value={t.id}>{t.name}</option>
-              ))}
+                appearance:"none", paddingLeft:12, paddingRight:28, paddingTop:6, paddingBottom:6,
+                borderRadius:999, fontSize:13, fontWeight:600, border:`1.5px solid`,
+                borderColor: hasMultiple ? "var(--accent)" : "var(--text-faint)",
+                color: hasMultiple ? "var(--accent)" : "var(--text-muted)",
+                background:"rgba(255,255,255,0.8)", outline:"none",
+              }}>
+              {therapistOptions.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
-            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px]"
-              style={{ color: hasMultiple ? "var(--accent)" : "#9e9e9e" }}>▼</span>
+            <span style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)", pointerEvents:"none", fontSize:9, color: hasMultiple ? "var(--accent)" : "var(--text-faint)" }}>▼</span>
           </div>
         </div>
 
-        <div className="h-px bg-stone-100 flex-shrink-0" />
+        <div style={{ height:1, background:"rgba(139,114,232,0.12)", flexShrink:0 }} />
 
-        <div className="overflow-y-auto flex-1 px-4 py-3 flex flex-col gap-2">
-          {filtered.map((a, i) => <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}><AppointmentCard appt={a} therapists={therapists} /></div>)}
+        <div style={{ overflowY:"auto", flex:1, padding:"12px 16px", display:"flex", flexDirection:"column", gap:12 }}>
+          {filtered.map((a, i) => (
+            <div key={a.id} className="card-enter" style={{ animationDelay:`${i*60}ms` }}>
+              <AppointmentCard appt={a} therapists={therapists} />
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -133,7 +67,7 @@ function PastModal({ past, therapists, onClose }: { past: Appointment[]; therapi
 
 export default function SchedulePage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [therapists, setTherapists] = useState<Therapist[]>([]);
+  const [therapists,   setTherapists]   = useState<Therapist[]>([]);
   const [showPastModal, setShowPastModal] = useState(false);
 
   useEffect(() => {
@@ -149,39 +83,58 @@ export default function SchedulePage() {
   const past = appointments.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.time}`) < now).reverse();
 
   return (
-    <main className="flex-1 px-4 pt-10 pb-32">
-      <h2 className="text-lg font-semibold text-stone-500 mb-0.5">我的行程</h2>
-      <h1 className="text-4xl font-bold mb-6" style={{ background: "linear-gradient(to right, var(--title-from), var(--title-to))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Schedule</h1>
+    <main style={{ flex:1, padding:"74px 22px 120px" }}>
+      {/* Header */}
+      <p style={{ fontSize:13, fontWeight:500, color:"var(--text-secondary)", letterSpacing:"0.14em", marginBottom:4 }}>
+        我的行程
+      </p>
+      <h1 style={{
+        fontFamily:"var(--font-cormorant,serif)", fontStyle:"italic", fontWeight:500,
+        fontSize:50, lineHeight:1, margin:"0 0 24px",
+        background:"var(--grad-title)",
+        WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text",
+      }}>Schedule</h1>
 
       {appointments.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
-          <span className="text-5xl">🗓</span>
-          <p className="text-stone-400 text-sm">還沒有預約紀錄</p>
-          <Link href="/appointments/new" className="text-sm text-white px-5 py-2 rounded-full" style={{ background: "var(--accent)" }}>
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"80px 0", gap:12, textAlign:"center" }}>
+          <span style={{ fontSize:48 }}>🗓</span>
+          <p style={{ color:"var(--text-muted)", fontSize:14 }}>還沒有預約紀錄</p>
+          <Link href="/appointments/new" style={{ fontSize:13.5, color:"white", padding:"8px 20px", borderRadius:999, background:"var(--grad-pink-cta)", textDecoration:"none", fontWeight:600, boxShadow:"0 6px 16px rgba(241,121,174,0.35)" }}>
             新增預約
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-5">
+        <div style={{ display:"flex", flexDirection:"column", gap:22 }}>
           {upcoming.length > 0 && (
             <section>
-              <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">即將到來</h2>
-              <div className="flex flex-col gap-2">
-                {upcoming.map((a, i) => <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}><AppointmentCard appt={a} therapists={therapists} /></div>)}
+              <span style={{ fontSize:13, fontWeight:700, color:"var(--ink-section)", letterSpacing:"0.08em", display:"block", marginBottom:12 }}>即將到來</span>
+              <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                {upcoming.map((a, i) => (
+                  <div key={a.id} className="card-enter" style={{ animationDelay:`${i*60}ms` }}>
+                    <AppointmentCard appt={a} therapists={therapists} showCountdown />
+                  </div>
+                ))}
               </div>
             </section>
           )}
           {past.length > 0 && (
             <section>
-              <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">歷史紀錄</h2>
-              <div className="flex flex-col gap-2">
-                {past.slice(0, 3).map((a, i) => <div key={a.id} className="card-enter" style={{ animationDelay: `${i * 60}ms` }}><AppointmentCard appt={a} therapists={therapists} /></div>)}
+              <span style={{ fontSize:13, fontWeight:700, color:"var(--ink-section)", letterSpacing:"0.08em", display:"block", marginBottom:12 }}>歷史紀錄</span>
+              <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                {past.slice(0, 3).map((a, i) => (
+                  <div key={a.id} className="card-enter" style={{ animationDelay:`${i*60}ms` }}>
+                    <AppointmentCard appt={a} therapists={therapists} />
+                  </div>
+                ))}
               </div>
               <button
                 onClick={() => setShowPastModal(true)}
-                className="mt-3 w-full py-2.5 rounded-2xl text-sm font-medium border"
-                style={{ color: "var(--accent)", borderColor: "#c4b5fd" }}
-              >
+                style={{
+                  marginTop:12, width:"100%", padding:"12px 0",
+                  borderRadius:16, fontSize:13.5, fontWeight:600,
+                  color:"var(--accent)", border:"1.5px solid rgba(139,114,232,0.3)",
+                  background:"rgba(139,114,232,0.06)", cursor:"pointer",
+                }}>
                 看全部紀錄（共 {past.length} 筆）
               </button>
             </section>
@@ -189,13 +142,16 @@ export default function SchedulePage() {
         </div>
       )}
 
-      <Link
-        href="/appointments/new"
-        className="fixed bottom-24 right-4 w-12 h-12 rounded-full text-white text-2xl flex items-center justify-center shadow-lg z-40"
-        style={{ background: "var(--accent)" }}
-      >
-        +
-      </Link>
+      {/* FAB */}
+      <Link href="/appointments/new" style={{
+        position:"fixed", bottom:100, right:22,
+        width:52, height:52, borderRadius:"50%",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        fontSize:26, color:"white", textDecoration:"none",
+        background:"linear-gradient(135deg,#9F86F2,#E88BC4)",
+        boxShadow:"0 8px 22px rgba(159,134,242,0.45)",
+        zIndex:40,
+      }}>+</Link>
 
       {showPastModal && (
         <PastModal past={past} therapists={therapists} onClose={() => setShowPastModal(false)} />

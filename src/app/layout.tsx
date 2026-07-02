@@ -1,9 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Cormorant_Garamond, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 
-const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  style: ["italic"],
+  weight: ["500", "600"],
+  display: "swap",
+});
+
+const notoSansTC = Noto_Sans_TC({
+  variable: "--font-noto",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Secret Hour",
@@ -19,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#E5F6FF",
+  themeColor: "#F7F5FC",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -28,7 +41,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-TW" className={`${geist.variable} h-full`}>
+    <html lang="zh-TW" className={`${cormorant.variable} ${notoSansTC.variable} h-full`}>
       <body className="min-h-dvh flex flex-col antialiased">
         {children}
         <BottomNav />
