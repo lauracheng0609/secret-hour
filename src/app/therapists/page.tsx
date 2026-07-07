@@ -131,7 +131,7 @@ function WishCard({ item, onSave, onDelete, onCancel }: {
           {item.isRealized ? "✨ 已實現" : "✓ 標記實現"}
         </button>
         <button onClick={() => setEditing(true)}
-          style={{ fontSize:12, fontWeight:700, padding:"6px 14px", borderRadius:999, color:"white", background:"rgba(139,114,232,0.85)", border:"none", cursor:"pointer" }}>
+          style={{ fontSize:12, fontWeight:700, padding:"6px 14px", borderRadius:999, color:"white", background:"var(--grad-primary)", border:"none", cursor:"pointer" }}>
           編輯
         </button>
         <button onClick={handleShareLine}
@@ -205,7 +205,7 @@ export default function TherapistsPage() {
       {tab === "therapists" && (
         <>
           <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:16 }}>
-            <Link href="/therapists/new" style={{ fontSize:13.5, fontWeight:700, color:"white", padding:"8px 20px", borderRadius:999, background:"linear-gradient(135deg,#9F86F2,#E88BC4)", textDecoration:"none", boxShadow:"0 6px 16px rgba(159,134,242,0.35)" }}>
+            <Link href="/therapists/new" style={{ fontSize:13.5, fontWeight:700, color:"white", padding:"8px 20px", borderRadius:999, background:"var(--grad-primary)", textDecoration:"none", boxShadow:"0 6px 16px rgba(124,98,214,0.28)" }}>
               新增 +
             </Link>
           </div>
@@ -213,7 +213,7 @@ export default function TherapistsPage() {
           {therapists.length === 0 ? (
             <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"80px 0", gap:12, textAlign:"center" }}>
               <p style={{ color:"var(--text-muted)", fontSize:14 }}>還沒有師傅資料</p>
-              <Link href="/therapists/new" style={{ fontSize:13.5, fontWeight:700, color:"white", padding:"8px 20px", borderRadius:999, background:"linear-gradient(135deg,#9F86F2,#E88BC4)", textDecoration:"none" }}>新增師傅</Link>
+              <Link href="/therapists/new" style={{ fontSize:13.5, fontWeight:700, color:"white", padding:"8px 20px", borderRadius:999, background:"var(--grad-primary)", textDecoration:"none" }}>新增師傅</Link>
             </div>
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
@@ -244,7 +244,7 @@ export default function TherapistsPage() {
                           )}
                         </div>
                         <Link href={`/therapists/${t.id}`}
-                          style={{ fontSize:13, fontWeight:700, color:"white", padding:"7px 16px", borderRadius:999, background:"rgba(139,114,232,0.85)", textDecoration:"none", flexShrink:0 }}>
+                          style={{ fontSize:13, fontWeight:700, color:"white", padding:"7px 16px", borderRadius:999, background:"var(--grad-primary)", textDecoration:"none", flexShrink:0 }}>
                           編輯
                         </Link>
                       </div>
@@ -274,7 +274,7 @@ export default function TherapistsPage() {
       {tab === "wishes" && (
         <>
           <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:16 }}>
-            <button onClick={handleAddWish} style={{ fontSize:13.5, fontWeight:700, color:"white", padding:"8px 20px", borderRadius:999, background:"linear-gradient(135deg,#9F86F2,#E88BC4)", border:"none", cursor:"pointer", boxShadow:"0 6px 16px rgba(159,134,242,0.35)" }}>
+            <button onClick={handleAddWish} style={{ fontSize:13.5, fontWeight:700, color:"white", padding:"8px 20px", borderRadius:999, background:"var(--grad-primary)", border:"none", cursor:"pointer", boxShadow:"0 6px 16px rgba(124,98,214,0.28)" }}>
               新增 +
             </button>
           </div>
