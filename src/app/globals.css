@@ -62,10 +62,13 @@
   --ink:          #E0D0C0;
   --ink-section:  #D0C0A0;
   --text-primary: #E0D0C0;
-  --text-secondary: #A09080;
-  --text-muted:   #907860;
-  --text-faint:   #706050;
+  --text-secondary: #B8A890;
+  --text-muted:   #A09070;
+  --text-faint:   #807060;
   --text-card:    #D0C0A8;
+  /* Date gradients — warm amber & sage for dark-bg readability */
+  --grad-pink-date: linear-gradient(135deg, #D4956A, #C07840);
+  --grad-blue-date: linear-gradient(135deg, #8AAA88, #6A9068);
   --glass-bg:          rgba(30,22,14,0.65);
   --glass-border:      rgba(80,60,40,0.4);
   --glass-shadow:      0 12px 36px rgba(128,80,48,0.18);
