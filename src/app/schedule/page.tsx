@@ -148,8 +148,8 @@ export default function SchedulePage() {
         width:52, height:52, borderRadius:"50%",
         display:"flex", alignItems:"center", justifyContent:"center",
         fontSize:26, color:"white", textDecoration:"none",
-        background:"linear-gradient(135deg,#9F86F2,#E88BC4)",
-        boxShadow:"0 8px 22px rgba(159,134,242,0.45)",
+        background:"var(--grad-primary)",
+        boxShadow:"0 8px 22px rgba(124,98,214,0.35)",
         zIndex:40,
       }}>+</Link>
 

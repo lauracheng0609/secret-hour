@@ -17,7 +17,7 @@ function GradientAvatar({ src, name, size = 28 }: { src?: string; name: string; 
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%", flexShrink: 0,
-      background: "linear-gradient(135deg, #9F86F2, #E88BC4)",
+      background: "var(--grad-primary)",
       display: "flex", alignItems: "center", justifyContent: "center",
       border: "2px solid rgba(255,255,255,0.9)",
       boxShadow: "0 4px 10px rgba(159,134,242,0.3)",

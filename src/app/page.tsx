@@ -66,8 +66,8 @@ function CalendarView({ appointments }: { appointments: Appointment[] }) {
                   borderRadius:"50%",
                   fontSize:13.5, fontWeight: isToday(day) ? 700 : 400,
                   color: isToday(day) ? "white" : "var(--ink)",
-                  background: isToday(day) ? "linear-gradient(135deg,#9F86F2,#E88BC4)" : "transparent",
-                  boxShadow: isToday(day) ? "0 6px 14px rgba(159,134,242,0.45)" : "none",
+                  background: isToday(day) ? "var(--grad-primary)" : "transparent",
+                  boxShadow: isToday(day) ? "0 6px 14px rgba(124,98,214,0.35)" : "none",
                   transition: "all 0.15s ease",
                 }}>{day}</div>
                 {apptDays.has(day) && !isToday(day) && (
@@ -165,7 +165,7 @@ export default function HomePage() {
           <h1 style={{
             fontFamily:"var(--font-cormorant,serif)", fontStyle:"italic", fontWeight:500,
             fontSize:50, lineHeight:1, margin:0,
-            background:"linear-gradient(100deg,#8B72E8 10%,#C77BD4 55%,#EF87B8 95%)",
+            background:"var(--grad-title)",
             WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text",
           }}>Secret Hour</h1>
         </div>

@@ -13,10 +13,10 @@ function GradientAvatar({ src, name, size = 64 }: { src?: string; name: string; 
   return (
     <div style={{
       width:size, height:size, borderRadius:"50%", flexShrink:0,
-      background:"linear-gradient(135deg,#9F86F2,#E88BC4)",
+      background:"var(--grad-primary)",
       display:"flex", alignItems:"center", justifyContent:"center",
       border:"3px solid rgba(255,255,255,0.9)",
-      boxShadow:"0 6px 18px rgba(159,134,242,0.28)",
+      boxShadow:"0 6px 18px rgba(124,98,214,0.22)",
     }}>
       <span style={{
         fontFamily:"var(--font-cormorant,serif)", fontStyle:"italic", fontWeight:600,
@@ -93,12 +93,12 @@ function WishCard({ item, onSave, onDelete, onCancel }: {
         <textarea value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="備忘（選填）" rows={2}
           style={{ ...inputStyle, resize:"none" }} />
         <div style={{ display:"flex", gap:8 }}>
-          <button onClick={handleSave} style={{ flex:1, padding:"9px 0", borderRadius:14, fontSize:13.5, fontWeight:700, color:"white", background:"linear-gradient(135deg,#F179AE,#C77BD4)", border:"none", cursor:"pointer", boxShadow:"0 6px 16px rgba(241,121,174,0.3)" }}>儲存</button>
+          <button onClick={handleSave} style={{ flex:1, padding:"9px 0", borderRadius:14, fontSize:13.5, fontWeight:700, color:"white", background:"var(--grad-pink-cta)", border:"none", cursor:"pointer", boxShadow:"0 6px 16px rgba(124,98,214,0.28)" }}>儲存</button>
           <button onClick={() => item.place !== "" ? setEditing(false) : onCancel?.()}
             style={{ padding:"9px 16px", borderRadius:14, fontSize:13.5, color:"var(--text-muted)", background:"var(--glass-bg)", border:"1px solid var(--glass-border)", cursor:"pointer" }}>取消</button>
         </div>
         {item.place !== "" && (
-          <button onClick={() => onDelete(item.id)} style={{ fontSize:12.5, color:"#E88BC4", textAlign:"center", background:"none", border:"none", cursor:"pointer", padding:"4px 0" }}>
+          <button onClick={() => onDelete(item.id)} style={{ fontSize:12.5, color:"var(--accent-hot)", textAlign:"center", background:"none", border:"none", cursor:"pointer", padding:"4px 0" }}>
             刪除這個許願
           </button>
         )}
@@ -193,7 +193,7 @@ export default function TherapistsPage() {
           <button key={t} onClick={() => setTab(t)} style={{
             flex:1, padding:"9px 0", borderRadius:14, fontSize:13.5, fontWeight:600, cursor:"pointer", border:"none",
             ...(tab === t
-              ? { background:"linear-gradient(135deg,#9F86F2,#E88BC4)", color:"white", boxShadow:"0 6px 16px rgba(159,134,242,0.35)" }
+              ? { background:"var(--grad-primary)", color:"white", boxShadow:"0 6px 16px rgba(124,98,214,0.28)" }
               : { background:"transparent", color:"var(--text-muted)" }),
           }}>
             {t === "therapists" ? "我的師傅" : "許願池"}
@@ -251,7 +251,7 @@ export default function TherapistsPage() {
 
                       {/* Stats row */}
                       <div style={{ display:"flex", gap:10, marginTop:14 }}>
-                        <div style={{ flex:1, padding:"8px 12px", borderRadius:14, background:"rgba(159,134,242,0.1)", textAlign:"center" }}>
+                        <div style={{ flex:1, padding:"8px 12px", borderRadius:14, background:"rgba(139,114,232,0.08)", textAlign:"center" }}>
                           <p style={{ fontSize:20, fontFamily:"var(--font-cormorant,serif)", fontStyle:"italic", fontWeight:600, color:"var(--accent)", lineHeight:1, margin:0 }}>{totalAppts}</p>
                           <p style={{ fontSize:11, color:"var(--text-muted)", marginTop:2 }}>總次數</p>
                         </div>

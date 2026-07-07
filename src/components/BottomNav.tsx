@@ -49,15 +49,9 @@ export default function BottomNav() {
           className="flex items-center justify-center -mt-5"
           style={{
             width: 56, height: 56, borderRadius: "50%",
-            background: isHome
-              ? "linear-gradient(135deg, #9F86F2, #E88BC4)"
-              : "var(--nav-bg, rgba(255,255,255,0.72))",
-            border: isHome
-              ? "3px solid rgba(255,255,255,0.9)"
-              : "1.5px solid rgba(139,114,232,0.25)",
-            boxShadow: isHome
-              ? "0 10px 26px rgba(159,134,242,0.5)"
-              : "0 4px 14px rgba(124,98,214,0.12)",
+            background: isHome ? "var(--grad-primary)" : "var(--nav-bg, rgba(255,255,255,0.72))",
+            border: isHome ? "3px solid rgba(255,255,255,0.9)" : "1.5px solid rgba(139,114,232,0.25)",
+            boxShadow: isHome ? "0 10px 26px rgba(124,98,214,0.35)" : "0 4px 14px rgba(124,98,214,0.12)",
           }}
         >
           {isHome ? (
