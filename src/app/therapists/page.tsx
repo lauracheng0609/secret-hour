@@ -250,14 +250,14 @@ export default function TherapistsPage() {
                       </div>
 
                       {/* Stats row */}
-                      <div style={{ display:"flex", gap:10, marginTop:14 }}>
-                        <div style={{ flex:1, padding:"8px 12px", borderRadius:14, background:"rgba(139,114,232,0.08)", textAlign:"center" }}>
-                          <p style={{ fontSize:20, fontFamily:"var(--font-cormorant,serif)", fontStyle:"italic", fontWeight:600, color:"var(--accent)", lineHeight:1, margin:0 }}>{totalAppts}</p>
-                          <p style={{ fontSize:11, color:"var(--text-muted)", marginTop:2 }}>總次數</p>
+                      <div style={{ display:"flex", gap:8, marginTop:14, minWidth:0 }}>
+                        <div style={{ flexShrink:0, width:72, padding:"8px 0", borderRadius:14, background:"rgba(139,114,232,0.08)", textAlign:"center" }}>
+                          <p style={{ fontSize:22, fontFamily:"var(--font-cormorant,serif)", fontStyle:"italic", fontWeight:600, color:"var(--accent)", lineHeight:1, margin:0 }}>{totalAppts}</p>
+                          <p style={{ fontSize:11, color:"var(--text-muted)", marginTop:2, whiteSpace:"nowrap" }}>總次數</p>
                         </div>
                         {t.memo && (
-                          <div style={{ flex:2, padding:"8px 12px", borderRadius:14, background:"rgba(247,191,221,0.18)", display:"flex", alignItems:"center" }}>
-                            <p style={{ fontSize:12, color:"var(--text-secondary)", margin:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>📝 {t.memo}</p>
+                          <div style={{ flex:1, minWidth:0, padding:"8px 12px", borderRadius:14, background:"rgba(139,114,232,0.06)", display:"flex", alignItems:"center", overflow:"hidden" }}>
+                            <p style={{ fontSize:12, color:"var(--text-secondary)", margin:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", width:"100%" }}>📝 {t.memo}</p>
                           </div>
                         )}
                       </div>
