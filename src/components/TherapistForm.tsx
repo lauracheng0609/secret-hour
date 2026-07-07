@@ -21,11 +21,15 @@ function emptyItem(type: FeeItem["type"]): FeeItem {
   };
 }
 
+const iStyle: React.CSSProperties = {
+  borderRadius: 12, padding: "9px 12px", fontSize: 14,
+  background: "var(--input-bg)", color: "var(--input-text)",
+  border: "1px solid var(--glass-border)", outline: "none",
+  boxSizing: "border-box" as const,
+};
+
 function ItemRow({
-  item,
-  onUpdate,
-  onRemove,
-  canRemove,
+  item, onUpdate, onRemove, canRemove,
 }: {
   item: FeeItem;
   onUpdate: (field: keyof FeeItem, value: string | number | boolean) => void;
@@ -33,37 +37,39 @@ function ItemRow({
   canRemove: boolean;
 }) {
   return (
-    <div className="flex gap-2 items-center">
+    <div style={{ display:"flex", gap:8, alignItems:"center" }}>
+      {/* Label — fills remaining space */}
       <input
         value={item.label}
         onChange={(e) => onUpdate("label", e.target.value)}
         placeholder={item.type === "timeunit" ? "加時服務名稱" : "服務項目名稱"}
-        className="flex-1 border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
+        style={{ ...iStyle, flex:1, minWidth:0 }}
       />
+      {/* Unit select for timeunit */}
       {item.type === "timeunit" && (
-        <div className="flex items-center border border-stone-200 rounded-xl px-2 py-2 gap-1 w-24">
-          <select
-            value={item.unitMinutes ?? 30}
-            onChange={(e) => onUpdate("unitMinutes", Number(e.target.value))}
-            className="w-full text-xs focus:outline-none bg-transparent"
-          >
-            <option value={30}>30 min</option>
-            <option value={60}>60 min</option>
-          </select>
-        </div>
+        <select
+          value={item.unitMinutes ?? 30}
+          onChange={(e) => onUpdate("unitMinutes", Number(e.target.value))}
+          style={{ ...iStyle, width:80, paddingLeft:8, paddingRight:8, appearance:"none" as const }}
+        >
+          <option value={30}>30min</option>
+          <option value={60}>60min</option>
+        </select>
       )}
-      <div className="flex items-center border border-stone-200 rounded-xl px-3 py-2 gap-1 w-28">
-        <span className="text-xs text-stone-400">NT$</span>
+      {/* NT$ amount — fixed width */}
+      <div style={{ ...iStyle, display:"flex", alignItems:"center", gap:4, width:104, flexShrink:0 }}>
+        <span style={{ fontSize:12, color:"var(--text-muted)", whiteSpace:"nowrap" }}>NT$</span>
         <input
           type="number"
           value={item.amount || ""}
           onChange={(e) => onUpdate("amount", Number(e.target.value))}
           placeholder="0"
-          className="w-full text-sm focus:outline-none text-right"
+          style={{ width:"100%", fontSize:13.5, textAlign:"right", background:"transparent", border:"none", outline:"none", color:"var(--input-text)" }}
         />
       </div>
       {canRemove && (
-        <button type="button" onClick={onRemove} className="text-stone-300 text-lg">×</button>
+        <button type="button" onClick={onRemove}
+          style={{ fontSize:20, color:"var(--text-faint)", background:"none", border:"none", cursor:"pointer", padding:"0 2px", flexShrink:0 }}>×</button>
       )}
     </div>
   );
@@ -228,57 +234,30 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       </div>
 
       {/* Basic info */}
-      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
-        <h2 className="text-sm font-semibold text-stone-500">基本資料</h2>
+      <section style={{ background:"var(--section-bg)", border:"1px solid var(--glass-border)", borderRadius:20, padding:16, display:"flex", flexDirection:"column", gap:12 }}>
+        <span style={{ fontSize:13, fontWeight:700, color:"var(--ink-section)" }}>基本資料</span>
+        {[
+          { label:"師傅名稱 *", val:name, set:setName, placeholder:"例：王小明", required:true },
+          { label:"暱稱",       val:nickname, set:setNickname, placeholder:"例：小可愛" },
+          { label:"聯絡方式",   val:contact,  set:setContact,  placeholder:"LINE ID、電話等" },
+          { label:"備註",       val:note,     set:setNote,     placeholder:"其他補充" },
+        ].map(({ label, val, set, placeholder, required }) => (
+          <div key={label}>
+            <label style={{ fontSize:12, color:"var(--text-muted)", display:"block", marginBottom:4 }}>{label}</label>
+            <input value={val} onChange={(e) => { markDirty(); set(e.target.value); }}
+              placeholder={placeholder} required={required}
+              style={{ ...iStyle, width:"100%" }} />
+          </div>
+        ))}
         <div>
-          <label className="text-xs text-stone-400 mb-1 block">師傅名稱 *</label>
-          <input
-            value={name}
-            onChange={(e) => { markDirty(); setName(e.target.value); }}
-            placeholder="例：王小明"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
-            required
-          />
-        </div>
-        <div>
-          <label className="text-xs text-stone-400 mb-1 block">暱稱</label>
-          <input
-            value={nickname}
-            onChange={(e) => { markDirty(); setNickname(e.target.value); }}
-            placeholder="例：小可愛"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
-          />
-        </div>
-        <div>
-          <label className="text-xs text-stone-400 mb-1 block">聯絡方式</label>
-          <input
-            value={contact}
-            onChange={(e) => { markDirty(); setContact(e.target.value); }}
-            placeholder="LINE ID、電話等"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
-          />
-        </div>
-        <div>
-          <label className="text-xs text-stone-400 mb-1 block">備註</label>
-          <input
-            value={note}
-            onChange={(e) => { markDirty(); setNote(e.target.value); }}
-            placeholder="其他補充"
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
-          />
-        </div>
-        <div>
-          <label className="text-xs text-stone-400 mb-1 block">我與師傅的紀念日</label>
-          <input
-            type="date"
-            value={anniversaryDate}
+          <label style={{ fontSize:12, color:"var(--text-muted)", display:"block", marginBottom:4 }}>我與師傅的紀念日</label>
+          <input type="date" value={anniversaryDate}
             onChange={(e) => { markDirty(); setAnniversaryDate(e.target.value); }}
-            className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
-          />
+            style={{ ...iStyle, width:"100%" }} />
           {anniversaryDate && (() => {
             const days = Math.floor((Date.now() - new Date(anniversaryDate).getTime()) / (1000 * 60 * 60 * 24));
             return days >= 0 ? (
-              <p className="text-xs mt-1.5 font-medium" style={{ color: "var(--accent)" }}>
+              <p style={{ fontSize:12, marginTop:6, fontWeight:600, color:"var(--accent)" }}>
                 我與這個師傅已經相遇 {days} 天 ♥
               </p>
             ) : null;
@@ -287,57 +266,54 @@ export default function TherapistForm({ initial, onDirtyChange }: Props) {
       </section>
 
       {/* Base fee */}
-      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
-        <h2 className="text-sm font-semibold text-stone-500">基礎服務（必選）</h2>
+      <section style={{ background:"var(--section-bg)", border:"1px solid var(--glass-border)", borderRadius:20, padding:16, display:"flex", flexDirection:"column", gap:10 }}>
+        <span style={{ fontSize:13, fontWeight:700, color:"var(--ink-section)" }}>基礎服務（必選）</span>
         {baseItems.map((fi) => (
-          <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={baseItems.length > 1} />
+          <ItemRow key={fi.id} item={fi} onUpdate={(f,v)=>updateItem(fi.id,f,v)} onRemove={()=>removeItem(fi.id)} canRemove={baseItems.length>1} />
         ))}
-        <button type="button" onClick={() => addItem("base")} className="text-xs text-left" style={{ color: "var(--accent)" }}>＋ 新增基礎項目</button>
+        <button type="button" onClick={()=>addItem("base")} style={{ fontSize:13, color:"var(--accent)", background:"none", border:"none", cursor:"pointer", textAlign:"left", padding:"2px 0" }}>＋ 新增基礎項目</button>
       </section>
 
       {/* Time unit */}
-      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-stone-500">加時服務</h2>
-          <span className="text-[10px] text-stone-400 bg-stone-50 border border-stone-100 px-2 py-0.5 rounded-full">單位時間計費</span>
+      <section style={{ background:"var(--section-bg)", border:"1px solid var(--glass-border)", borderRadius:20, padding:16, display:"flex", flexDirection:"column", gap:10 }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <span style={{ fontSize:13, fontWeight:700, color:"var(--ink-section)" }}>加時服務</span>
+          <span style={{ fontSize:10, color:"var(--text-muted)", background:"var(--input-bg)", border:"1px solid var(--glass-border)", padding:"2px 8px", borderRadius:999 }}>單位時間計費</span>
         </div>
-        {timeItems.length === 0 && <p className="text-xs text-stone-300">尚未設定</p>}
+        {timeItems.length === 0 && <p style={{ fontSize:12, color:"var(--text-faint)" }}>尚未設定</p>}
         {timeItems.map((fi) => (
-          <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={true} />
+          <ItemRow key={fi.id} item={fi} onUpdate={(f,v)=>updateItem(fi.id,f,v)} onRemove={()=>removeItem(fi.id)} canRemove={true} />
         ))}
-        <button type="button" onClick={() => addItem("timeunit")} className="text-xs text-left" style={{ color: "var(--accent)" }}>＋ 新增加時項目</button>
+        <button type="button" onClick={()=>addItem("timeunit")} style={{ fontSize:13, color:"var(--accent)", background:"none", border:"none", cursor:"pointer", textAlign:"left", padding:"2px 0" }}>＋ 新增加時項目</button>
       </section>
 
       {/* Add-ons */}
-      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
-        <h2 className="text-sm font-semibold text-stone-500">加購項目（可選）</h2>
-        {addonItems.length === 0 && <p className="text-xs text-stone-300">尚未設定</p>}
+      <section style={{ background:"var(--section-bg)", border:"1px solid var(--glass-border)", borderRadius:20, padding:16, display:"flex", flexDirection:"column", gap:10 }}>
+        <span style={{ fontSize:13, fontWeight:700, color:"var(--ink-section)" }}>加購項目（可選）</span>
+        {addonItems.length === 0 && <p style={{ fontSize:12, color:"var(--text-faint)" }}>尚未設定</p>}
         {addonItems.map((fi) => (
-          <ItemRow key={fi.id} item={fi} onUpdate={(f, v) => updateItem(fi.id, f, v)} onRemove={() => removeItem(fi.id)} canRemove={true} />
+          <ItemRow key={fi.id} item={fi} onUpdate={(f,v)=>updateItem(fi.id,f,v)} onRemove={()=>removeItem(fi.id)} canRemove={true} />
         ))}
-        <button type="button" onClick={() => addItem("addon")} className="text-xs text-left" style={{ color: "var(--accent)" }}>＋ 新增加購項目</button>
+        <button type="button" onClick={()=>addItem("addon")} style={{ fontSize:13, color:"var(--accent)", background:"none", border:"none", cursor:"pointer", textAlign:"left", padding:"2px 0" }}>＋ 新增加購項目</button>
       </section>
 
       {/* Deposit */}
-      <section className="rounded-2xl p-4 shadow-sm flex flex-col gap-3" style={{ background: "var(--section-bg)" }}>
-        <h2 className="text-sm font-semibold text-stone-500">訂金設定</h2>
-        <div className="flex items-center border border-stone-200 rounded-xl px-3 py-2 gap-1">
-          <span className="text-xs text-stone-400">NT$</span>
-          <input
-            type="number"
-            value={depositAmount || ""}
+      <section style={{ background:"var(--section-bg)", border:"1px solid var(--glass-border)", borderRadius:20, padding:16, display:"flex", flexDirection:"column", gap:10 }}>
+        <span style={{ fontSize:13, fontWeight:700, color:"var(--ink-section)" }}>訂金設定</span>
+        <div style={{ ...iStyle, display:"flex", alignItems:"center", gap:6 }}>
+          <span style={{ fontSize:12, color:"var(--text-muted)" }}>NT$</span>
+          <input type="number" value={depositAmount || ""}
             onChange={(e) => { markDirty(); setDepositAmount(Number(e.target.value)); }}
             placeholder="預約時需支付的訂金"
-            className="flex-1 text-sm focus:outline-none"
-          />
+            style={{ flex:1, fontSize:13.5, background:"transparent", border:"none", outline:"none", color:"var(--input-text)" }} />
         </div>
       </section>
 
-      <button
-        type="submit"
-        className="text-white rounded-2xl py-3 font-semibold text-sm shadow-md"
-        style={{ background: "var(--accent)", boxShadow: "0 4px 12px #8D6AFF44" }}
-      >
+      <button type="submit" style={{
+        background:"var(--grad-primary)", color:"white", borderRadius:18,
+        padding:"14px 0", fontWeight:700, fontSize:15, border:"none", cursor:"pointer",
+        boxShadow:"0 8px 20px rgba(124,98,214,0.3)",
+      }}>
         儲存師傅資料
       </button>
     </form>
