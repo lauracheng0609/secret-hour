@@ -108,10 +108,12 @@ export default function AppointmentCard({
             <span style={{ fontWeight: 700, fontSize: 15.5, color: "var(--ink)", flex: "none" }}>
               {appt.therapistName}
             </span>
-            {isHot && showCountdown && chipText && (
+            {showCountdown && chipText && (
               <span style={{
                 fontSize: 11, fontWeight: 500, padding: "2px 9px", borderRadius: 999,
-                background: "rgba(239,109,168,0.12)", color: "var(--accent-hot)", flex: "none",
+                background: isHot ? "rgba(239,109,168,0.12)" : "rgba(139,114,232,0.1)",
+                color: isHot ? "var(--accent-hot)" : "var(--accent)",
+                flex: "none",
               }}>{chipText}</span>
             )}
             {isPast && (
